@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 \"C:/Users/Usuario/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"fintech SaaS dashboard professional accounting\" --design-system -p \"Zuma Monotributos\")",
+      "Bash(python \"C:/Users/Usuario/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"fintech SaaS dashboard professional accounting\" --design-system -p \"Zuma Monotributos\")",
+      "Bash(where python3:*)",
+      "Bash(where python:*)",
+      "Bash(/c/Users/Usuario/AppData/Local/Programs/Python/Python312/python.exe --version)",
+      "Bash(/c/Python312/python.exe --version)",
+      "Bash(/c/Python311/python.exe --version)",
+      "Read(//c/Users/Usuario/AppData/Local/Programs/**)",
+      "Bash(pip --version)"
+    ]
+  }
+}
