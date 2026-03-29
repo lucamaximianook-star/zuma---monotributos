@@ -347,6 +347,8 @@ td{padding:16px 18px;vertical-align:middle}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -752,8 +754,15 @@ function buildP(nombre){
     </div>`;
 
   document.getElementById('spf').innerHTML=`
-    <button class="btn-p" onclick="window.print()">↓ Exportar PDF</button>
+    <button class="btn-p" id="pdf-btn">↓ Exportar PDF</button>
     <button class="btn-s" id="excel-btn">↓ Exportar Excel</button>`;
+
+  // Set PDF button handler
+  {
+    const _nombre=nombre;
+    const pdfBtn=document.getElementById('pdf-btn');
+    if(pdfBtn) pdfBtn.onclick=()=>exportPDF(_nombre);
+  }
 
   // Set excel button handler
   const excelBtn=document.getElementById('excel-btn');
@@ -873,6 +882,47 @@ function renderCharts(arr,meses,tot,cat,nx,TK,sc2,ciclo){
         </div>`:''
     ).join('');
     leg.innerHTML=items;
+  }
+}
+
+async function exportPDF(nombre){
+  const btn=document.getElementById('pdf-btn');
+  if(btn){btn.textContent='Generando PDF...';btn.disabled=true;}
+  try{
+    const panel=document.getElementById('sp');
+    const canvas=await html2canvas(panel,{
+      scale:2,
+      useCORS:true,
+      backgroundColor:'#ffffff',
+      scrollY:-window.scrollY,
+      windowHeight:panel.scrollHeight
+    });
+    const imgData=canvas.toDataURL('image/jpeg',0.95);
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF('p','mm','a4');
+    const pageW=pdf.internal.pageSize.getWidth();
+    const pageH=pdf.internal.pageSize.getHeight();
+    const margin=10;
+    const usableW=pageW-margin*2;
+    const imgW=usableW;
+    const imgH=(canvas.height*imgW)/canvas.width;
+    const usableH=pageH-margin*2;
+    let yOff=0;
+    while(yOff<imgH){
+      if(yOff>0) pdf.addPage();
+      pdf.addImage(imgData,'JPEG',margin,margin-yOff,imgW,imgH);
+      yOff+=usableH;
+    }
+    const mNames=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const now=new Date();
+    const mesAnio=mNames[now.getMonth()]+now.getFullYear();
+    const fileName=`Reporte_${nombre.replace(/\s+/g,' ').trim()}_${mesAnio}.pdf`;
+    pdf.save(fileName);
+  }catch(e){
+    console.error('Error generando PDF:',e);
+    alert('Error al generar el PDF. Intentá de nuevo.');
+  }finally{
+    if(btn){btn.textContent='↓ Exportar PDF';btn.disabled=false;}
   }
 }
 
