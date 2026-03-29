@@ -100,7 +100,7 @@ th{padding:14px 18px;text-align:left;font-weight:600;font-size:11px;color:var(--
 th:hover{color:var(--text2)}
 th.asc::after{content:' ↑';color:var(--celeste)}
 th.desc::after{content:' ↓';color:var(--celeste)}
-tbody tr{border-bottom:1px solid var(--gris);transition:background-color 150ms var(--ease-out),transform 200ms var(--ease-out);cursor:default;opacity:0;transform:translateY(6px);animation:rowIn .35s var(--ease-out) forwards}
+tbody tr{border-bottom:1px solid var(--gris);transition:background-color 150ms var(--ease-out),transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out);cursor:default;opacity:0;transform:translateY(6px);animation:rowIn .35s var(--ease-out) forwards}
 tbody tr:last-child{border-bottom:none}
 tbody tr:nth-child(even) td{background:#F8FAFC}
 tbody tr.sel td{background:#EEF4FF}
@@ -235,7 +235,7 @@ td{padding:16px 18px;vertical-align:middle}
 /* Hover guards for touch devices */
 @media(hover:hover) and (pointer:fine){
   .hero-stat.entered:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);transform:translateY(0) scale(1.02)}
-  tbody tr:hover{transform:translateY(0) scale(1.02)}
+  tbody tr:hover{transform:translateY(0) scale(1.02);box-shadow:0 2px 12px rgba(0,0,0,.10);position:relative;z-index:1}
   tbody tr:hover td{background:#EDF2FF}
   .mc:hover{transform:translateY(-2px)}
   .dbtn:hover{border-color:var(--celeste);color:var(--celeste);background:#F0F6FF;transform:translateX(2px)}
