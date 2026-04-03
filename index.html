@@ -520,7 +520,7 @@ function showE(m){const e=document.getElementById('err');e.textContent=m;e.style
 function hideE(){document.getElementById('err').style.display='none';}
 
 function resolveCiclo(v){
-  if(v==='auto'){const m=new Date().getMonth();return m<6?'c1':'c2';}
+  if(v==='auto'){const now=new Date(),y=now.getFullYear(),m=now.getMonth();if(y>2025||(y===2025&&m>=6))return'c2';return'c1';}
   return v;
 }
 function onCC(){
