@@ -165,15 +165,15 @@ td{padding:16px 18px;vertical-align:middle}
 /* KPI grid */
 .kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kc{background:var(--gris);border-radius:var(--radius-sm);padding:14px;border:1px solid transparent}
-.kc.dark{background:var(--marino)}
+.kc.dark{background:var(--gris)}
 .kc.acc{background:#EEF4FF;border-color:#BFDBFE}
 .kl{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
-.kc.dark .kl{color:rgba(160,200,243,.6)}
+.kc.dark .kl{color:var(--text3)}
 .kv{font-size:22px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;line-height:1}
-.kc.dark .kv{color:#fff;font-size:22px}
+.kc.dark .kv{color:var(--text);font-size:22px}
 .kc.acc .kv{color:var(--celeste2)}
 .ks{font-size:11px;color:var(--text3);margin-top:4px}
-.kc.dark .ks{color:rgba(255,255,255,.3)}
+.kc.dark .ks{color:var(--text3)}
 
 /* Progress */
 .pr{margin:8px 0}
@@ -202,9 +202,9 @@ td{padding:16px 18px;vertical-align:middle}
 .ccn{color:var(--text3)}
 .cca{font-weight:500;color:var(--text);font-family:'DM Mono',monospace}
 .cc-sub{display:flex;justify-content:space-between;padding:6px 8px;background:var(--gris);border-radius:5px;margin-top:8px;font-size:11px}
-.cc-tot{background:var(--marino);border-radius:7px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:6px}
-.cc-tot .ccn{color:rgba(255,255,255,.55);font-size:11px;font-weight:600}
-.cc-tot .cca{color:#fff;font-size:15px;font-weight:700}
+.cc-tot{background:var(--gris);border-radius:7px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.cc-tot .ccn{color:var(--text3);font-size:11px;font-weight:600}
+.cc-tot .cca{color:var(--text);font-size:15px;font-weight:700}
 .cc-diff{margin-top:8px;text-align:center;font-size:10px;color:var(--celeste2);font-weight:600}
 
 /* Month chart */
@@ -271,7 +271,7 @@ td{padding:16px 18px;vertical-align:middle}
   .sph{background:#0E1A2C!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 
-/* ── PDF / PRINT STYLES ─────────────────────────────────── */
+/* ── PDF / PRINT STYLES ───────────────────────────────────────────── */
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   body { background: #fff !important; }
@@ -280,84 +280,12 @@ td{padding:16px 18px;vertical-align:middle}
         box-shadow: none !important; display: flex !important; height: auto !important; overflow: visible !important; }
   .spb { overflow: visible !important; height: auto !important; }
   .spf { display: none !important; }
-  /* PDF Header — stays dark */
   .sph { background: #0E1A2C !important; padding: 24px 28px !important; }
-  /* PDF Sections — light background */
-  .pdf-kpi-section { background: #ffffff !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-prog-section { background: #F1F4F8 !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-cuota-section { background: #ffffff !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-chart-section { background: #F8FAFC !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-months-section { background: #F1F4F8 !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-12m-section { background: #ffffff !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-12m-section .kc { background: #F1F4F8 !important; border-color: #E4E9F0 !important; }
-  .pdf-12m-section .kc.dark { background: #F1F4F8 !important; }
-  /* Force colors in print */
-  .kc.dark { background: #F1F4F8 !important; }
-  .sph { background: #0E1A2C !important; }
-  .cc-tot { background: #F1F4F8 !important; }
   .b-ok { background: #F0FDF4 !important; color: #16A34A !important; border: 1px solid #BBF7D0 !important; }
   .b-al { background: #FFFBEB !important; color: #D97706 !important; border: 1px solid #FDE68A !important; }
   .b-ro { background: #FEF2F2 !important; color: #DC2626 !important; border: 1px solid #FECACA !important; }
   .b-inc { background: #F5F3FF !important; color: #7C3AED !important; border: 1px solid #DDD6FE !important; }
   canvas { max-width: 100% !important; }
-
-  /* Text colors for light section backgrounds */
-  .pdf-kpi-section .sec-t,
-  .pdf-prog-section .sec-t,
-  .pdf-cuota-section .sec-t,
-  .pdf-months-section .sec-t,
-  .pdf-12m-section .sec-t { color: #424A51 !important; }
-
-  .pdf-kpi-section .kl,
-  .pdf-prog-section .kl,
-  .pdf-cuota-section .kl,
-  .pdf-12m-section .kl,
-  .pdf-months-section .mc-l { color: #424A51 !important; }
-
-  .pdf-kpi-section .kv,
-  .pdf-prog-section .kv,
-  .pdf-cuota-section .kv,
-  .pdf-12m-section .kv { color: #0E1A2C !important; }
-
-  .pdf-kpi-section .ks,
-  .pdf-prog-section .ks,
-  .pdf-cuota-section .ks,
-  .pdf-12m-section .ks { color: #424A51 !important; }
-
-  .pdf-prog-section .prh span,
-  .pdf-12m-section .prh span { color: #424A51 !important; }
-  .pdf-prog-section .prh strong,
-  .pdf-12m-section .prh strong { color: #0E1A2C !important; }
-  .pdf-prog-section .prb,
-  .pdf-12m-section .prb { background: #E4E9F0 !important; }
-
-  .pdf-kpi-section .kc { background: #F1F4F8 !important; border-color: #E4E9F0 !important; }
-  .pdf-kpi-section .kc.dark { background: #F1F4F8 !important; }
-
-  .pdf-cuota-section .cc { background: #F8FAFC !important; border-color: #E4E9F0 !important; }
-  .pdf-cuota-section .cc.nx { background: #EEF4FF !important; border-color: #BFDBFE !important; }
-  .pdf-cuota-section .cc-tit { color: #424A51 !important; }
-  .pdf-cuota-section .cc-cat { color: #0E1A2C !important; }
-  .pdf-cuota-section .cc.nx .cc-cat { color: #2563EB !important; }
-  .pdf-cuota-section .ccl { border-bottom-color: #E4E9F0 !important; }
-  .pdf-cuota-section .ccn { color: #424A51 !important; }
-  .pdf-cuota-section .cca { color: #0E1A2C !important; }
-  .pdf-cuota-section .cc-sub { background: #F1F4F8 !important; }
-  .pdf-cuota-section .cc-diff { color: #2563EB !important; }
-
-  .pdf-months-section .mc-v { color: #0E1A2C !important; }
-  .pdf-months-section .mc.z-m .mc-v { color: #94A3B8 !important; }
-  .pdf-months-section .mc.ok-m { background: #F0FDF4 !important; border-color: #BBF7D0 !important; }
-  .pdf-months-section .mc.z-m { background: #F8FAFC !important; }
-  .pdf-months-section .mc.ms-m { background: #F5F3FF !important; border-color: #DDD6FE !important; }
-
-  .pdf-prog-section .al-box.ro { background: #FEF2F2 !important; border-color: #FECACA !important; color: #DC2626 !important; }
-  .pdf-prog-section .al-box.inc { background: #F5F3FF !important; border-color: #DDD6FE !important; color: #7C3AED !important; }
-
-  /* Dark KPI card text override for light bg */
-  .kc.dark .kl { color: #424A51 !important; }
-  .kc.dark .kv { color: #0E1A2C !important; }
-  .kc.dark .ks { color: #424A51 !important; }
 }
 
 </style>
@@ -787,13 +715,7 @@ function buildP(nombre){
       <div class="sec-t">Evolución mensual de facturación</div>
       <canvas id="chart-bars" height="160" style="width:100%;max-width:100%"></canvas>
     </div>
-    <div class="sps pdf-chart-section" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
-      <div style="flex:1;min-width:180px">
-        <div class="sec-t">Acumulado vs topes</div>
-        <canvas id="chart-donut" style="max-width:220px;max-height:220px;margin:0 auto;display:block"></canvas>
-      </div>
-      <div id="chart-legend" style="flex:1;min-width:160px;font-size:11px;line-height:2"></div>
-    </div>`;
+    `;
 
   document.getElementById('spf').innerHTML=`
     <button class="btn-p" id="pdf-btn">↓ Exportar PDF</button>
@@ -825,9 +747,6 @@ function renderCharts(arr,meses,tot,cat,nx,TK,sc2,ciclo){
 
   // Destroy existing charts
   Chart.getChart(canB)?.destroy();
-  const canD=document.getElementById('chart-donut');
-  if(canD) Chart.getChart(canD)?.destroy();
-
   const maxV=Math.max(...arr,1);
   const barColors=arr.map(v=>{
     if(v===0) return 'rgba(203,213,225,0.5)';
@@ -871,60 +790,6 @@ function renderCharts(arr,meses,tot,cat,nx,TK,sc2,ciclo){
     }
   });
 
-  // ── DONUT CHART: acumulado vs topes ──────────────────────
-  if(!canD) return;
-  const falta_cat=nx?Math.max(nx.t-tot,0):0;
-  const falta_k=Math.max(TK-(nx?nx.t:cat.t),0);
-  const superado=Math.max(tot-TK,0);
-
-  const donutData=superado>0
-    ? [tot, 0, 0, 0]
-    : nx
-      ? [tot, falta_cat, falta_k, 0]
-      : [tot, 0, Math.max(TK-tot,0), 0];
-
-  const labels=superado>0
-    ? ['Facturado (superó tope K)','','','']
-    : nx
-      ? ['Facturado','Falta para cat. '+nx.c,'Resto hasta tope K','']
-      : ['Facturado','','Falta para tope K',''];
-
-  const colors=['#3E8CFF','#F59E0B','#E2E8F0','transparent'];
-  const borders=['#2563EB','#D97706','#CBD5E1','transparent'];
-
-  new Chart(canD,{
-    type:'doughnut',
-    data:{
-      labels,
-      datasets:[{
-        data:donutData,
-        backgroundColor:colors,
-        borderColor:borders,
-        borderWidth:2,
-        hoverOffset:4,
-      }]
-    },
-    options:{
-      responsive:false,
-      cutout:'68%',
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:ctx=>ctx.label+': $'+Math.round(ctx.raw).toLocaleString('es-AR')}}
-      }
-    }
-  });
-
-  // Legend
-  const leg=document.getElementById('chart-legend');
-  if(leg){
-    const items=labels.map((l,i)=>l&&donutData[i]>0
-      ?`<div style="display:flex;align-items:center;gap:6px;margin:3px 0">
-          <div style="width:12px;height:12px;border-radius:3px;background:${colors[i]};flex-shrink:0"></div>
-          <span style="color:#475569">${l}: <strong>$${Math.round(donutData[i]).toLocaleString('es-AR')}</strong></span>
-        </div>`:''
-    ).join('');
-    leg.innerHTML=items;
-  }
 }
 
 async function exportPDF(nombre){
@@ -943,20 +808,8 @@ async function exportPDF(nombre){
     if(xBtn) xBtn.style.display='none';
     if(spf) spf.style.display='none';
 
-    /* 1b. Hide donut section for PDF */
-    var donutSec = null;
-    var donutCanvas = panel.querySelector('#chart-donut');
-    if(donutCanvas) { donutSec = donutCanvas.closest('.sps'); if(donutSec) donutSec.style.display='none'; }
 
-    /* 1c. Lighten section backgrounds for PDF */
-    var allSps = panel.querySelectorAll('.sps');
-    var origSpsBg = [];
-    for(var i=0; i<allSps.length; i++){ origSpsBg.push(allSps[i].style.background); allSps[i].style.background='#ffffff'; }
-    var allDarkKc = panel.querySelectorAll('.kc.dark');
-    var origDarkKcBg = [];
-    for(var i=0; i<allDarkKc.length; i++){ origDarkKcBg.push(allDarkKc[i].style.background); allDarkKc[i].style.background='#F1F4F8'; }
-
-
+    
     /* 2. Convert Chart.js canvases to static images */
     const chartCanvases=panel.querySelectorAll('canvas');
     const chartBackups=[];
@@ -1001,7 +854,7 @@ async function exportPDF(nombre){
 
     /* 5. Capture each section separately for better pagination */
     const sph=panel.querySelector('.sph');
-    const allParts=[sph,...sections].filter(p=>!p.querySelector('#chart-donut'));
+    const allParts=[sph,...sections];
     const partCanvases=[];
     for(const part of allParts){
       if(!part) continue;
@@ -1017,9 +870,6 @@ async function exportPDF(nombre){
     if(spb&&origStyles.spb) Object.assign(spb.style,origStyles.spb);
     if(spf) spf.style.display='';
     if(xBtn) xBtn.style.display='';
-    if(donutSec) donutSec.style.display='';
-    for(var i=0; i<allSps.length; i++){ allSps[i].style.background=origSpsBg[i]; }
-    for(var i=0; i<allDarkKc.length; i++){ allDarkKc[i].style.background=origDarkKcBg[i]; }
     sections.forEach(s=>{s.style.pageBreakInside='';s.style.breakInside='';});
     chartBackups.forEach(b=>{
       const img=b.next?b.next.previousSibling:b.parent.lastChild;
