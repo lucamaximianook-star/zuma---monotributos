@@ -280,79 +280,84 @@ td{padding:16px 18px;vertical-align:middle}
         box-shadow: none !important; display: flex !important; height: auto !important; overflow: visible !important; }
   .spb { overflow: visible !important; height: auto !important; }
   .spf { display: none !important; }
-  /* PDF Header */
+  /* PDF Header — stays dark */
   .sph { background: #0E1A2C !important; padding: 24px 28px !important; }
-  /* PDF Sections colored */
-  .pdf-kpi-section { background: #0E1A2C !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-prog-section { background: #132338 !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-cuota-section { background: #1a2d44 !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  /* PDF Sections — light background */
+  .pdf-kpi-section { background: #ffffff !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  .pdf-prog-section { background: #F1F4F8 !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  .pdf-cuota-section { background: #ffffff !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
   .pdf-chart-section { background: #F8FAFC !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-months-section { background: #0E1A2C !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-12m-section { background: #0E1A2C !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-  .pdf-12m-section .kc { background: rgba(255,255,255,0.06) !important; border-color: rgba(255,255,255,0.08) !important; }
-  .pdf-12m-section .kc.dark { background: rgba(255,255,255,0.12) !important; }
+  .pdf-months-section { background: #F1F4F8 !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  .pdf-12m-section { background: #ffffff !important; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  .pdf-12m-section .kc { background: #F1F4F8 !important; border-color: #E4E9F0 !important; }
+  .pdf-12m-section .kc.dark { background: #F1F4F8 !important; }
   /* Force colors in print */
-  .kc.dark { background: #0E1A2C !important; }
+  .kc.dark { background: #F1F4F8 !important; }
   .sph { background: #0E1A2C !important; }
-  .cc-tot { background: #0E1A2C !important; }
+  .cc-tot { background: #F1F4F8 !important; }
   .b-ok { background: #F0FDF4 !important; color: #16A34A !important; border: 1px solid #BBF7D0 !important; }
   .b-al { background: #FFFBEB !important; color: #D97706 !important; border: 1px solid #FDE68A !important; }
   .b-ro { background: #FEF2F2 !important; color: #DC2626 !important; border: 1px solid #FECACA !important; }
   .b-inc { background: #F5F3FF !important; color: #7C3AED !important; border: 1px solid #DDD6FE !important; }
   canvas { max-width: 100% !important; }
 
-  /* Text colors for dark section backgrounds */
+  /* Text colors for light section backgrounds */
   .pdf-kpi-section .sec-t,
   .pdf-prog-section .sec-t,
   .pdf-cuota-section .sec-t,
   .pdf-months-section .sec-t,
-  .pdf-12m-section .sec-t { color: #A0C8F3 !important; }
+  .pdf-12m-section .sec-t { color: #424A51 !important; }
 
   .pdf-kpi-section .kl,
   .pdf-prog-section .kl,
   .pdf-cuota-section .kl,
   .pdf-12m-section .kl,
-  .pdf-months-section .mc-l { color: rgba(160,200,243,0.6) !important; }
+  .pdf-months-section .mc-l { color: #424A51 !important; }
 
   .pdf-kpi-section .kv,
   .pdf-prog-section .kv,
   .pdf-cuota-section .kv,
-  .pdf-12m-section .kv { color: #ffffff !important; }
+  .pdf-12m-section .kv { color: #0E1A2C !important; }
 
   .pdf-kpi-section .ks,
   .pdf-prog-section .ks,
   .pdf-cuota-section .ks,
-  .pdf-12m-section .ks { color: rgba(255,255,255,0.4) !important; }
+  .pdf-12m-section .ks { color: #424A51 !important; }
 
   .pdf-prog-section .prh span,
-  .pdf-12m-section .prh span { color: rgba(255,255,255,0.5) !important; }
+  .pdf-12m-section .prh span { color: #424A51 !important; }
   .pdf-prog-section .prh strong,
-  .pdf-12m-section .prh strong { color: #ffffff !important; }
+  .pdf-12m-section .prh strong { color: #0E1A2C !important; }
   .pdf-prog-section .prb,
-  .pdf-12m-section .prb { background: rgba(255,255,255,0.1) !important; }
+  .pdf-12m-section .prb { background: #E4E9F0 !important; }
 
-  .pdf-kpi-section .kc { background: rgba(255,255,255,0.06) !important; border-color: rgba(255,255,255,0.08) !important; }
-  .pdf-kpi-section .kc.dark { background: rgba(255,255,255,0.12) !important; }
+  .pdf-kpi-section .kc { background: #F1F4F8 !important; border-color: #E4E9F0 !important; }
+  .pdf-kpi-section .kc.dark { background: #F1F4F8 !important; }
 
-  .pdf-cuota-section .cc { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.1) !important; }
-  .pdf-cuota-section .cc.nx { background: rgba(62,140,255,0.15) !important; border-color: rgba(62,140,255,0.3) !important; }
-  .pdf-cuota-section .cc-tit { color: #A0C8F3 !important; }
-  .pdf-cuota-section .cc-cat { color: #ffffff !important; }
-  .pdf-cuota-section .cc.nx .cc-cat { color: #60A5FA !important; }
-  .pdf-cuota-section .ccl { border-bottom-color: rgba(255,255,255,0.08) !important; }
-  .pdf-cuota-section .ccn { color: rgba(255,255,255,0.5) !important; }
-  .pdf-cuota-section .cca { color: #ffffff !important; }
-  .pdf-cuota-section .cc-sub { background: rgba(255,255,255,0.06) !important; }
-  .pdf-cuota-section .cc-diff { color: #60A5FA !important; }
+  .pdf-cuota-section .cc { background: #F8FAFC !important; border-color: #E4E9F0 !important; }
+  .pdf-cuota-section .cc.nx { background: #EEF4FF !important; border-color: #BFDBFE !important; }
+  .pdf-cuota-section .cc-tit { color: #424A51 !important; }
+  .pdf-cuota-section .cc-cat { color: #0E1A2C !important; }
+  .pdf-cuota-section .cc.nx .cc-cat { color: #2563EB !important; }
+  .pdf-cuota-section .ccl { border-bottom-color: #E4E9F0 !important; }
+  .pdf-cuota-section .ccn { color: #424A51 !important; }
+  .pdf-cuota-section .cca { color: #0E1A2C !important; }
+  .pdf-cuota-section .cc-sub { background: #F1F4F8 !important; }
+  .pdf-cuota-section .cc-diff { color: #2563EB !important; }
 
-  .pdf-months-section .mc-v { color: #ffffff !important; }
-  .pdf-months-section .mc.z-m .mc-v { color: rgba(255,255,255,0.3) !important; }
-  .pdf-months-section .mc.ok-m { background: rgba(34,197,94,0.15) !important; border-color: rgba(34,197,94,0.3) !important; }
-  .pdf-months-section .mc.z-m { background: rgba(255,255,255,0.04) !important; }
-  .pdf-months-section .mc.ms-m { background: rgba(124,58,237,0.2) !important; border-color: rgba(124,58,237,0.3) !important; }
+  .pdf-months-section .mc-v { color: #0E1A2C !important; }
+  .pdf-months-section .mc.z-m .mc-v { color: #94A3B8 !important; }
+  .pdf-months-section .mc.ok-m { background: #F0FDF4 !important; border-color: #BBF7D0 !important; }
+  .pdf-months-section .mc.z-m { background: #F8FAFC !important; }
+  .pdf-months-section .mc.ms-m { background: #F5F3FF !important; border-color: #DDD6FE !important; }
 
-  .pdf-prog-section .al-box.ro { background: rgba(220,38,38,0.15) !important; border-color: rgba(220,38,38,0.3) !important; color: #FCA5A5 !important; }
-  .pdf-prog-section .al-box.inc { background: rgba(124,58,237,0.15) !important; border-color: rgba(124,58,237,0.3) !important; color: #C4B5FD !important; }
+  .pdf-prog-section .al-box.ro { background: #FEF2F2 !important; border-color: #FECACA !important; color: #DC2626 !important; }
+  .pdf-prog-section .al-box.inc { background: #F5F3FF !important; border-color: #DDD6FE !important; color: #7C3AED !important; }
+
+  /* Dark KPI card text override for light bg */
+  .kc.dark .kl { color: #424A51 !important; }
+  .kc.dark .kv { color: #0E1A2C !important; }
+  .kc.dark .ks { color: #424A51 !important; }
 }
 
 </style>
@@ -982,12 +987,12 @@ async function exportPDF(nombre){
 
     /* 5. Capture each section separately for better pagination */
     const sph=panel.querySelector('.sph');
-    const allParts=[sph,...sections];
+    const allParts=[sph,...sections].filter(p=>!p.querySelector('#chart-donut'));
     const partCanvases=[];
     for(const part of allParts){
       if(!part) continue;
       const c=await html2canvas(part,{
-        scale:2,useCORS:true,backgroundColor:null,logging:false,allowTaint:true,
+        scale:1,useCORS:true,backgroundColor:null,logging:false,allowTaint:true,
         width:680,windowWidth:680,scrollX:0,scrollY:0
       });
       partCanvases.push(c);
