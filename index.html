@@ -72,6 +72,9 @@ body{font-family:'DM Sans',sans-serif;background:#EEF2F7;color:var(--text);font-
 .hero-stat.al .hs-n{color:#FCD34D}
 .hero-stat.ro{background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.15)}
 .hero-stat.ro .hs-n{color:#F87171}
+.hero-stat.rx{background:#FEF2F2;border-color:#FECACA}
+.hero-stat.rx .hs-n{color:#DC2626}
+.hero-stat.rx .hs-l{color:#991B1B}
 .hero-right{margin-left:auto;padding:20px 0 20px 24px;border-left:none;display:flex;flex-direction:column;justify-content:center;min-width:140px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.06);padding:20px 24px;opacity:0;transform:translateY(10px);transition:opacity .4s var(--ease-out),transform .4s var(--ease-out)}
 .hero-right.entered{opacity:1;transform:translateY(0)}
 .hr-lbl{color:rgba(255,255,255,.4);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
@@ -97,6 +100,7 @@ table{width:100%;border-collapse:collapse}
 thead{background:var(--gris)}
 thead tr{border-bottom:1.5px solid var(--gris2)}
 th{padding:14px 18px;text-align:left;font-weight:600;font-size:11px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;cursor:pointer;white-space:nowrap;user-select:none;transition:var(--ease)}
+th#th12{background:var(--marino);color:var(--celeste);border-radius:6px 6px 0 0}
 th:hover{color:var(--text2)}
 th.asc::after{content:' ↑';color:var(--celeste)}
 th.desc::after{content:' ↓';color:var(--celeste)}
@@ -258,12 +262,12 @@ td{padding:16px 18px;vertical-align:middle}
   .mgrid{grid-template-columns:repeat(4,1fr)}
   .sp{width:100vw}
   th:nth-child(3),td:nth-child(3){display:none}
-  th:nth-child(7),td:nth-child(7){display:none}
+  th:nth-child(6),td:nth-child(6){display:none}
 }
 @media(max-width:600px){
   .mgrid{grid-template-columns:repeat(3,1fr)}
   .kgrid{grid-template-columns:1fr}
-  th:nth-child(4),td:nth-child(4){display:none}
+  th:nth-child(5),td:nth-child(5){display:none}
 }
 @media print{
   .nav,.hero,.tb-wrap,.main,.ov,.err-b{display:none!important}
@@ -339,6 +343,10 @@ td{padding:16px 18px;vertical-align:middle}
       <div class="hs-n" id="sr">—</div>
       <div class="hs-l">Rojo — sobre 80%</div>
     </div>
+    <div class="hero-stat rx">
+      <div class="hs-n" id="srx">—</div>
+      <div class="hs-l">En riesgo exclusión</div>
+    </div>
     <div class="hero-right">
       <div class="hr-lbl">Ciclo activo</div>
       <div class="hr-val" id="ciclo-val">Jul-25 → Jun-26</div>
@@ -352,8 +360,9 @@ td{padding:16px 18px;vertical-align:middle}
       <select id="fg" onchange="render()"><option value="">Todos</option></select></div>
     <div class="tf-g"><label>Ciclo</label>
       <select id="fc" onchange="onCC()">
+        <option value="auto" selected>Ciclo activo (automático)</option>
         <option value="c1">Ciclo 1 — Ene/Dic 2025</option>
-        <option value="c2" selected>Ciclo 2 — Jul 25/Jun 26</option>
+        <option value="c2">Ciclo 2 — Jul 25/Jun 26</option>
       </select></div>
     <div class="tf-g"><label>Estado</label>
       <select id="fs" onchange="render()">
@@ -378,10 +387,10 @@ td{padding:16px 18px;vertical-align:middle}
           <th id="thn" onclick="sortBy('n')">Cliente</th>
           <th id="thg" onclick="sortBy('g')">Grupo</th>
           <th id="thc" onclick="sortBy('c')" style="text-align:center">Cat.</th>
+          <th id="th12" onclick="sortBy('m')" style="text-align:right">% Tope Reg Sim</th>
           <th id="tht" onclick="sortBy('t')" style="text-align:right">Total <span id="thlbl">Jul–Jun</span></th>
           <th id="thp" onclick="sortBy('p')" style="text-align:right">% Tope K</th>
           <th>Estado</th>
-          <th id="th12" onclick="sortBy('m')" style="text-align:right">% Tope Reg Sim</th>
           <th></th>
         </tr></thead>
         <tbody id="tbody"></tbody>
@@ -510,9 +519,15 @@ function prog(p,t){document.getElementById('lbar').style.width=p+'%';document.ge
 function showE(m){const e=document.getElementById('err');e.textContent=m;e.style.display='block';}
 function hideE(){document.getElementById('err').style.display='none';}
 
+function resolveCiclo(v){
+  if(v==='auto'){const m=new Date().getMonth();return m<6?'c1':'c2';}
+  return v;
+}
 function onCC(){
-  const ci=document.getElementById('fc').value;
-  document.getElementById('ciclo-val').textContent=ci==='c1'?'Ene-25 → Dic-25':'Jul-25 → Jun-26';
+  const raw=document.getElementById('fc').value;
+  const ci=resolveCiclo(raw);
+  const lbl=ci==='c1'?'Ene-25 → Dic-25':'Jul-25 → Jun-26';
+  document.getElementById('ciclo-val').textContent=raw==='auto'?lbl+' (auto)':lbl;
   document.getElementById('thlbl').textContent=ci==='c1'?'Ene–Dic':'Jul–Jun';
   render();
 }
@@ -543,7 +558,7 @@ function gCu(c,ci){
 }
 
 function gFilt(){
-  const g=document.getElementById('fg').value,ci=document.getElementById('fc').value;
+  const g=document.getElementById('fg').value,ci=resolveCiclo(document.getElementById('fc').value);
   const sf=document.getElementById('fs').value,q=document.getElementById('fq').value.toLowerCase();
   return CL.filter(c=>{
     if(g&&c.g!==g)return false;if(q&&!c.n.toLowerCase().includes(q))return false;
@@ -552,7 +567,7 @@ function gFilt(){
     const s=gS(TK>0?tot/TK:0,gInc(arr,miss,ci));
     if(sf&&s.k!==sf)return false;return true;
   }).map(c=>{
-    const ci=document.getElementById('fc').value;
+    const ci=resolveCiclo(document.getElementById('fc').value);
     const arr=ci==='c1'?c.c1:c.c2,miss=ci==='c1'?c.m1:c.m2;
     const tot=arr.reduce((a,b)=>a+b,0),pct=TK>0?tot/TK:0;
     const cIdx=gCi(tot),inc=gInc(arr,miss,ci);
@@ -576,6 +591,7 @@ function render(){
   document.getElementById('so').textContent=data.filter(d=>d.s.k==='ok').length;
   document.getElementById('sa').textContent=data.filter(d=>d.s.k==='al').length;
   document.getElementById('sr').textContent=data.filter(d=>d.s.k==='ro').length;
+  document.getElementById('srx').textContent=data.filter(d=>sem12k(d.sem12m)==='ro').length;
   document.getElementById('tcnt').textContent=data.length+' clientes';
   const tbody=document.getElementById('tbody');
   if(!data.length){tbody.innerHTML=`<tr><td colspan="8" class="no-r">No hay clientes que coincidan.</td></tr>`;return;}
@@ -589,10 +605,10 @@ function render(){
         <span class="pl">${fmtp(d.pct)}</span></div></td>
       <td><span class="b b-g">${d.g}</span></td>
       <td style="text-align:center"><span class="b b-cat">${cL}</span></td>
-      <td class="am">$${fmt(d.tot)}</td>
+      <td style="text-align:right"><div class="pc" style="color:${sCol(sem12k(d.sem12m))};font-size:15px;font-weight:700">${fmtp(d.pct12m)}</div><div class="pi"><div class="pt" style="height:6px"><div class="pf" style="width:${Math.min(d.pct12m*100,100).toFixed(1)}%;background:${sCol(sem12k(d.sem12m))}"></div></div></div><div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px">${fmtk(d.acum12m)}</div><span class="b b-${sem12k(d.sem12m)}" style="font-size:11px;padding:4px 10px;margin-top:3px;display:inline-flex;border-width:2px">${sem12lbl(d.sem12m)}</span></td>
+      <td class="am">${fmt(d.tot)}</td>
       <td class="pc" style="color:${sc2}">${fmtp(d.pct)}</td>
       <td><span class="b b-${d.s.k}">${d.s.l}</span></td>
-      <td style="text-align:right"><div class="pc" style="color:${sCol(sem12k(d.sem12m))}">${fmtp(d.pct12m)}</div><div class="pi"><div class="pt"><div class="pf" style="width:${Math.min(d.pct12m*100,100).toFixed(1)}%;background:${sCol(sem12k(d.sem12m))}"></div></div></div><div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px">${fmtk(d.acum12m)}</div><span class="b b-${sem12k(d.sem12m)}" style="font-size:10px;padding:3px 8px;margin-top:3px;display:inline-flex">${sem12lbl(d.sem12m)}</span></td>
       <td><button class="dbtn" onclick="openP('${d.n.replace(/'/g,"\\'")}')">Ver →</button></td>
     </tr>`;
   }).join('');
