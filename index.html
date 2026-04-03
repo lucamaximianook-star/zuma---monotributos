@@ -992,7 +992,7 @@ async function exportPDF(nombre){
     for(const part of allParts){
       if(!part) continue;
       const c=await html2canvas(part,{
-        scale:1,useCORS:true,backgroundColor:null,logging:false,allowTaint:true,
+        scale:1.5,useCORS:true,backgroundColor:null,logging:false,allowTaint:true,
         width:680,windowWidth:680,scrollX:0,scrollY:0
       });
       partCanvases.push(c);
