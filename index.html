@@ -943,32 +943,19 @@ async function exportPDF(nombre){
     if(xBtn) xBtn.style.display='none';
     if(spf) spf.style.display='none';
 
-    /* 1b. Hide donut chart section */
-    const donutSection = panel.querySelector('#chart-donut')?.closest('.sps');
-    if(donutSection) donutSection.style.display='none';
+    /* 1b. Hide donut section for PDF */
+    var donutSec = null;
+    var donutCanvas = panel.querySelector('#chart-donut');
+    if(donutCanvas) { donutSec = donutCanvas.closest('.sps'); if(donutSec) donutSec.style.display='none'; }
 
-    /* 1c. Light backgrounds for PDF (except header) */
-    const pdfSections = panel.querySelectorAll('.sps');
-    const origBgs = [];
-    pdfSections.forEach(s => {
-      origBgs.push(s.style.background);
-      s.style.background = '#ffffff';
-    });
-    // Dark KPI cards to light
-    const darkCards = panel.querySelectorAll('.kc.dark');
-    const origDarkBgs = [];
-    darkCards.forEach(c => {
-      origDarkBgs.push({bg: c.style.background, color: c.style.color});
-      c.style.background = '#F1F4F8';
-    });
-    // Dark text overrides for labels/values inside dark cards
-    const darkLabels = panel.querySelectorAll('.kc.dark .kl, .kc.dark .ks');
-    darkLabels.forEach(el => { el.dataset.origColor = el.style.color; el.style.color = '#424A51'; });
-    const darkValues = panel.querySelectorAll('.kc.dark .kv');
-    darkValues.forEach(el => { el.dataset.origColor = el.style.color; el.style.color = '#0E1A2C'; });
-    // Section titles
-    const secTitles = panel.querySelectorAll('.sps .sec-t');
-    secTitles.forEach(el => { el.dataset.origColor = el.style.color; el.style.color = '#424A51'; });
+    /* 1c. Lighten section backgrounds for PDF */
+    var allSps = panel.querySelectorAll('.sps');
+    var origSpsBg = [];
+    for(var i=0; i<allSps.length; i++){ origSpsBg.push(allSps[i].style.background); allSps[i].style.background='#ffffff'; }
+    var allDarkKc = panel.querySelectorAll('.kc.dark');
+    var origDarkKcBg = [];
+    for(var i=0; i<allDarkKc.length; i++){ origDarkKcBg.push(allDarkKc[i].style.background); allDarkKc[i].style.background='#F1F4F8'; }
+
 
     /* 2. Convert Chart.js canvases to static images */
     const chartCanvases=panel.querySelectorAll('canvas');
@@ -1030,14 +1017,9 @@ async function exportPDF(nombre){
     if(spb&&origStyles.spb) Object.assign(spb.style,origStyles.spb);
     if(spf) spf.style.display='';
     if(xBtn) xBtn.style.display='';
-    // Restore donut section
-    if(donutSection) donutSection.style.display='';
-    // Restore backgrounds
-    pdfSections.forEach((s,i) => { s.style.background = origBgs[i]; });
-    darkCards.forEach((c,i) => { c.style.background = origDarkBgs[i].bg; });
-    darkLabels.forEach(el => { el.style.color = el.dataset.origColor || ''; });
-    darkValues.forEach(el => { el.style.color = el.dataset.origColor || ''; });
-    secTitles.forEach(el => { el.style.color = el.dataset.origColor || ''; });
+    if(donutSec) donutSec.style.display='';
+    for(var i=0; i<allSps.length; i++){ allSps[i].style.background=origSpsBg[i]; }
+    for(var i=0; i<allDarkKc.length; i++){ allDarkKc[i].style.background=origDarkKcBg[i]; }
     sections.forEach(s=>{s.style.pageBreakInside='';s.style.breakInside='';});
     chartBackups.forEach(b=>{
       const img=b.next?b.next.previousSibling:b.parent.lastChild;
