@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zuma â Monitor Monotributistas</title>
+<title>Zuma — Monitor Monotributistas</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <!-- v8 -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -102,8 +102,8 @@ thead tr{border-bottom:1.5px solid var(--gris2)}
 th{padding:14px 18px;text-align:left;font-weight:600;font-size:11px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;cursor:pointer;white-space:nowrap;user-select:none;transition:var(--ease)}
 th#th12{background:var(--marino);color:var(--celeste);border-radius:6px 6px 0 0}
 th:hover{color:var(--text2)}
-th.asc::after{content:' â';color:var(--celeste)}
-th.desc::after{content:' â';color:var(--celeste)}
+th.asc::after{content:' ↑';color:var(--celeste)}
+th.desc::after{content:' ↓';color:var(--celeste)}
 tbody tr{border-bottom:1px solid var(--gris);transition:background-color 150ms var(--ease-out),transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out);cursor:default;opacity:0;transform:translateY(6px);animation:rowIn .35s var(--ease-out) forwards}
 tbody tr:last-child{border-bottom:none}
 tbody tr:nth-child(even) td{background:#F8FAFC}
@@ -275,7 +275,7 @@ td{padding:16px 18px;vertical-align:middle}
   .sph{background:#0E1A2C!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 
-/* ââ PDF / PRINT STYLES âââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── PDF / PRINT STYLES ───────────────────────────────────────────── */
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   body { background: #fff !important; }
@@ -319,37 +319,37 @@ td{padding:16px 18px;vertical-align:middle}
   <div class="nav-r">
     <div class="nav-upd">
       <div class="nav-upd-l">Actualizado</div>
-      <div class="nav-upd-v" id="lupd">â</div>
+      <div class="nav-upd-v" id="lupd">—</div>
     </div>
-    <button class="nav-refresh" onclick="loadAll()">â» Actualizar</button>
+    <button class="nav-refresh" onclick="loadAll()">↻ Actualizar</button>
   </div>
 </nav>
 
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-stat">
-      <div class="hs-n" id="st">â</div>
+      <div class="hs-n" id="st">—</div>
       <div class="hs-l">Clientes activos</div>
     </div>
     <div class="hero-stat ok">
-      <div class="hs-n" id="so">â</div>
-      <div class="hs-l">OK â bajo 50%</div>
+      <div class="hs-n" id="so">—</div>
+      <div class="hs-l">OK — bajo 50%</div>
     </div>
     <div class="hero-stat al">
-      <div class="hs-n" id="sa">â</div>
-      <div class="hs-l">Alerta â 50â80%</div>
+      <div class="hs-n" id="sa">—</div>
+      <div class="hs-l">Alerta — 50–80%</div>
     </div>
     <div class="hero-stat ro">
-      <div class="hs-n" id="sr">â</div>
-      <div class="hs-l">Rojo â sobre 80%</div>
+      <div class="hs-n" id="sr">—</div>
+      <div class="hs-l">Rojo — sobre 80%</div>
     </div>
     <div class="hero-stat rx">
-      <div class="hs-n" id="srx">â</div>
-      <div class="hs-l">En riesgo exclusiÃ³n</div>
+      <div class="hs-n" id="srx">—</div>
+      <div class="hs-l">En riesgo exclusión</div>
     </div>
     <div class="hero-right">
       <div class="hr-lbl">Ciclo activo</div>
-      <div class="hr-val" id="ciclo-val">Jul-25 â Jun-26</div>
+      <div class="hr-val" id="ciclo-val">Jul-25 → Jun-26</div>
     </div>
   </div>
 </div>
@@ -360,9 +360,9 @@ td{padding:16px 18px;vertical-align:middle}
       <select id="fg" onchange="render()"><option value="">Todos</option></select></div>
     <div class="tf-g"><label>Ciclo</label>
       <select id="fc" onchange="onCC()">
-        <option value="auto" selected>Ciclo activo (automÃ¡tico)</option>
-        <option value="c1">Ciclo 1 â Ene/Dic 2025</option>
-        <option value="c2">Ciclo 2 â Jul 25/Jun 26</option>
+        <option value="auto" selected>Ciclo activo (automático)</option>
+        <option value="c1">Ciclo 1 — Ene/Dic 2025</option>
+        <option value="c2">Ciclo 2 — Jul 25/Jun 26</option>
       </select></div>
     <div class="tf-g"><label>Estado</label>
       <select id="fs" onchange="render()">
@@ -388,7 +388,7 @@ td{padding:16px 18px;vertical-align:middle}
           <th id="thg" onclick="sortBy('g')">Grupo</th>
           <th id="thc" onclick="sortBy('c')" style="text-align:center">Cat.</th>
           <th id="th12" onclick="sortBy('m')" style="text-align:right">% Tope Reg Sim</th>
-          <th id="tht" onclick="sortBy('t')" style="text-align:right">Total <span id="thlbl">JulâJun</span></th>
+          <th id="tht" onclick="sortBy('t')" style="text-align:right">Total <span id="thlbl">Jul–Jun</span></th>
           <th id="thp" onclick="sortBy('p')" style="text-align:right">% Tope K</th>
           <th>Estado</th>
           <th></th>
@@ -429,8 +429,8 @@ function n(v){
   v=v.replace(/\$/g,'').replace(/\s/g,'').replace(/%/g,'');
   if(/^\d{1,3}(\.\d{3})+,\d+$/.test(v))return parseFloat(v.replace(/\./g,'').replace(',','.'));
   if(/^\d+,\d+$/.test(v))return parseFloat(v.replace(',','.'));
-  if(/^\d+(\.\d+)?$/.test(v))return parseFloat(v);
   if(/^\d{1,3}(\.\d{3})+$/.test(v))return parseFloat(v.replace(/\./g,''));
+  if(/^\d+(\.\d+)?$/.test(v))return parseFloat(v);
   const x=parseFloat(v.replace(/\./g,'').replace(',','.'));return isNaN(x)?0:x;
 }
 function emp(v){v=String(v||'').trim().replace(/^"|"$/g,'');return!v||v===''||v==='nan';}
@@ -487,7 +487,7 @@ async function loadDash(){
 }
 
 async function loadAll(){
-  const btn=document.querySelector('.nav-refresh');if(btn)btn.textContent='â»';
+  const btn=document.querySelector('.nav-refresh');if(btn)btn.textContent='↻';
   sL(true);
   try{
     prog(10,'Cargando escalas...');await loadT();
@@ -496,7 +496,7 @@ async function loadAll(){
     prog(70,'Cargando Ciclo 2...');C2=await loadC(GIDS.CICLO2);
     prog(85,'Cargando clientes...');await loadCL();
     prog(92,'Cargando 12M...');await loadDash();
-    prog(100,'Listo â');
+    prog(100,'Listo ✓');
     CL.forEach(c=>{
       const d1=C1[c.n]||{months:new Array(12).fill(0),missing:new Array(12).fill(true)};
       const d2=C2[c.n]||{months:new Array(12).fill(0),missing:new Array(12).fill(true)};
@@ -506,12 +506,12 @@ async function loadAll(){
     const s=document.getElementById('fg');const ex=[...s.options].map(o=>o.value);
     [...new Set(CL.map(c=>c.g))].sort().forEach(g=>{if(!ex.includes(g)){const o=document.createElement('option');o.value=g;o.textContent=g;s.appendChild(o);}});
     const now=new Date();
-    document.getElementById('lupd').textContent=now.toLocaleDateString('es-AR')+' '+now.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})+' Â· K: $'+fmtk(TK);
+    document.getElementById('lupd').textContent=now.toLocaleDateString('es-AR')+' '+now.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})+' · K: $'+fmtk(TK);
     hideE();render();
     document.querySelectorAll('.hero-stat,.hero-right').forEach((el,i)=>{setTimeout(()=>el.classList.add('entered'),i*60);});
     setTimeout(()=>sL(false),500);
   }catch(e){showE('Error: '+e.message);sL(false);}
-  if(btn)btn.textContent='â» Actualizar';
+  if(btn)btn.textContent='↻ Actualizar';
 }
 
 function sL(v){const e=document.getElementById('ls');if(v)e.classList.remove('out');else e.classList.add('out');}
@@ -526,9 +526,9 @@ function resolveCiclo(v){
 function onCC(){
   const raw=document.getElementById('fc').value;
   const ci=resolveCiclo(raw);
-  const lbl=ci==='c1'?'Ene-25 â Dic-25':'Jul-25 â Jun-26';
+  const lbl=ci==='c1'?'Ene-25 → Dic-25':'Jul-25 → Jun-26';
   document.getElementById('ciclo-val').textContent=raw==='auto'?lbl+' (auto)':lbl;
-  document.getElementById('thlbl').textContent=ci==='c1'?'EneâDic':'JulâJun';
+  document.getElementById('thlbl').textContent=ci==='c1'?'Ene–Dic':'Jul–Jun';
   render();
 }
 
@@ -553,7 +553,7 @@ function gIIBB(c,ci){
 }
 function gCu(c,ci){
   if(!CATS.length)return{imp:0,jub:0,os:0,total:0};
-  const cat=CATS[ci],eB=c.a==='Venta de Bienes',eD=c.sl==='RelaciÃ³n de dependencia';
+  const cat=CATS[ci],eB=c.a==='Venta de Bienes',eD=c.sl==='Relación de dependencia';
   if(eD)return{imp:eB?cat.ib:cat.is,jub:0,os:0,total:eB?cat.tdb:cat.tds};
   return{imp:eB?cat.ib:cat.is,jub:cat.j,os:cat.os,total:eB?cat.tib:cat.tis};
 }
@@ -597,7 +597,7 @@ function render(){
   const tbody=document.getElementById('tbody');
   if(!data.length){tbody.innerHTML=`<tr><td colspan="8" class="no-r">No hay clientes que coincidan.</td></tr>`;return;}
   tbody.innerHTML=data.map((d,i)=>{
-    const cL=CATS.length?CATS[d.ci].c:'â',sc2=sCol(d.s.k);
+    const cL=CATS.length?CATS[d.ci].c:'—',sc2=sCol(d.s.k);
     const isS=sel===d.n?'sel':'';
     const delay=Math.min(i,8)*40;
     return`<tr class="${isS}" style="animation-delay:${delay}ms">
@@ -610,7 +610,7 @@ function render(){
       <td class="am">${fmt(d.tot)}</td>
       <td class="pc" style="color:${sc2}">${fmtp(d.pct)}</td>
       <td><span class="b b-${d.s.k}">${d.s.l}</span></td>
-      <td><button class="dbtn" onclick="openP('${d.n.replace(/'/g,"\\'")}')">Ver â</button></td>
+      <td><button class="dbtn" onclick="openP('${d.n.replace(/'/g,"\\'")}')">Ver →</button></td>
     </tr>`;
   }).join('');
 }
@@ -654,7 +654,7 @@ function buildP(nombre){
     </div>
     <div class="sph-top">
       <div class="sph-name">${c.n}</div>
-      <button class="sph-x" onclick="closeP()">â</button>
+      <button class="sph-x" onclick="closeP()">✕</button>
     </div>
     <div class="sph-tags">
       <span class="sph-tag">${c.g}</span><span class="sph-tag">${c.a}</span>
@@ -673,7 +673,7 @@ function buildP(nombre){
     let cls='mc ';
     if(isMiss&&isPast)cls+='ms-m';else if(!isPast)cls+='ft-m';else if(v===0)cls+='z-m';else cls+='ok-m';
     const bH=v>0?Math.round(v/maxV*48):0;
-    const vs=v>0?'$'+fmtk(v):isMiss&&isPast?'â ':'â';
+    const vs=v>0?'$'+fmtk(v):isMiss&&isPast?'⚠':'—';
     return`<div class="${cls}"><div class="mc-l">${meses[i]}</div><div class="mc-bw"><div class="mc-bar" style="height:${bH}px;background:${v>0?sc2:'var(--gris2)'}"></div></div><div class="mc-v">${vs}</div></div>`;
   }).join('');
 
@@ -681,14 +681,14 @@ function buildP(nombre){
     <div class="sps pdf-kpi-section">
       <div class="sec-t">Resumen del ciclo</div>
       <div class="kgrid">
-        <div class="kc dark"><div class="kl">FacturaciÃ³n ${ci==='c1'?'EneâDic 25':'Jul 25âJun 26'}</div><div class="kv">$${fmtk(tot)}</div><div class="ks">$${fmt(tot)}</div></div>
-        <div class="kc"><div class="kl">CategorÃ­a actual</div><div class="kv">${cat.c}</div><div class="ks">Tope: $${fmtk(cat.t)}</div></div>
-        <div class="kc"><div class="kl">Falta para cat. siguiente</div><div class="kv" style="color:${nx&&fCat>0?'var(--text)':'var(--ro)'}">${nx?'$'+fmtk(fCat):'MÃ¡ximo'}</div><div class="ks">${nx?'Cat. '+nx.c:''}</div></div>
+        <div class="kc dark"><div class="kl">Facturación ${ci==='c1'?'Ene–Dic 25':'Jul 25–Jun 26'}</div><div class="kv">$${fmtk(tot)}</div><div class="ks">$${fmt(tot)}</div></div>
+        <div class="kc"><div class="kl">Categoría actual</div><div class="kv">${cat.c}</div><div class="ks">Tope: $${fmtk(cat.t)}</div></div>
+        <div class="kc"><div class="kl">Falta para cat. siguiente</div><div class="kv" style="color:${nx&&fCat>0?'var(--text)':'var(--ro)'}">${nx?'$'+fmtk(fCat):'Máximo'}</div><div class="ks">${nx?'Cat. '+nx.c:''}</div></div>
         <div class="kc"><div class="kl">Falta para tope K</div><div class="kv" style="color:${fMax>0?'var(--text)':'var(--ro)'}">${fMax>0?'$'+fmtk(fMax):'Superado'}</div><div class="ks">$${fmtk(TK)}</div></div>
       </div>
     </div>
     <div class="sps pdf-12m-section" style="background:linear-gradient(135deg,#0E1A2C,#1a2d44);border-radius:10px">
-      <div class="sec-t" style="color:rgba(160,200,243,.6)">% Tope RÃ©gimen Simplificado (12M corridos)</div>
+      <div class="sec-t" style="color:rgba(160,200,243,.6)">% Tope Régimen Simplificado (12M corridos)</div>
       ${(()=>{const dd=DASH[nombre]||{acum12m:0,pct12m:0,sem12m:''};const k12=sem12k(dd.sem12m);const c12=sCol(k12);return`
       <div class="kgrid">
         <div class="kc dark"><div class="kl">Acumulado 12M</div><div class="kv">${fmtk(dd.acum12m)}</div><div class="ks">${fmt(dd.acum12m)}</div></div>
@@ -701,42 +701,42 @@ function buildP(nombre){
       <div class="sec-t">Progreso</div>
       <div class="pr"><div class="prh"><span>% del tope Cat. K</span><strong>${fmtp(pct)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(pct*100,100).toFixed(1)}%;background:${sc2}"></div></div></div>
       ${nx?`<div class="pr"><div class="prh"><span>% hacia cat. siguiente (${nx.c})</span><strong>${fmtp(pCat)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(pCat*100,100).toFixed(1)}%;background:${sc2}"></div></div></div>`:''}
-      ${inc?`<div class="al-box inc"><span>â </span><span>Hay meses pasados sin completar. El total puede ser incorrecto.</span></div>`:''}
-      ${pct>=0.8?`<div class="al-box ro"><span>ð¨</span><span>CategorÃ­a en riesgo. Revisar con el cliente y analizar recategorizaciÃ³n.</span></div>`:''}
+      ${inc?`<div class="al-box inc"><span>⚠</span><span>Hay meses pasados sin completar. El total puede ser incorrecto.</span></div>`:''}
+      ${pct>=0.8?`<div class="al-box ro"><span>🚨</span><span>Categoría en riesgo. Revisar con el cliente y analizar recategorización.</span></div>`:''}
     </div>
     <div class="sps pdf-cuota-section">
       <div class="sec-t">Cuotas mensuales</div>
       <div class="cgrid">
         <div class="cc">
-          <div class="cc-tit">Cat. actual â ${cat.c}</div><div class="cc-cat">${cat.c}</div>
+          <div class="cc-tit">Cat. actual — ${cat.c}</div><div class="cc-cat">${cat.c}</div>
           <div class="ccl"><span class="ccn">Imp. integrado</span><span class="cca">$${fmt(cu.imp)}</span></div>
-          ${eI?`<div class="ccl"><span class="ccn">JubilaciÃ³n</span><span class="cca">$${fmt(cu.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cu.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
+          ${eI?`<div class="ccl"><span class="ccn">Jubilación</span><span class="cca">$${fmt(cu.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cu.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
           <div class="cc-sub"><span class="ccn">IIBB</span><span class="cca">${ib===null?'No aplica':ib===0?'Exento':'$'+fmt(ib)}</span></div>
           <div class="cc-tot"><span class="ccn">TOTAL / MES</span><span class="cca">$${fmt(totM)}</span></div>
         </div>
         ${nx?`<div class="cc nx">
           <div class="cc-tit">Si sube a cat. ${nx.c}</div><div class="cc-cat">${nx.c}</div>
           <div class="ccl"><span class="ccn">Imp. integrado</span><span class="cca">$${fmt(cuN.imp)}</span></div>
-          ${eI?`<div class="ccl"><span class="ccn">JubilaciÃ³n</span><span class="cca">$${fmt(cuN.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cuN.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
+          ${eI?`<div class="ccl"><span class="ccn">Jubilación</span><span class="cca">$${fmt(cuN.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cuN.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
           <div class="cc-sub"><span class="ccn">IIBB</span><span class="cca">${ibN===null?'No aplica':ibN===0?'Exento':'$'+fmt(ibN||0)}</span></div>
           <div class="cc-tot"><span class="ccn">TOTAL / MES</span><span class="cca">$${fmt(totNM)}</span></div>
           <div class="cc-diff">+$${fmt(totNM-totM)}/mes adicionales</div>
-        </div>`:`<div class="cc crit"><div class="cc-tit">SituaciÃ³n crÃ­tica</div><div class="cc-cat">K</div><p style="font-size:11px;color:var(--ro);line-height:1.6;margin-top:8px">CategorÃ­a mÃ¡xima. Analizar exclusiÃ³n del rÃ©gimen.</p></div>`}
+        </div>`:`<div class="cc crit"><div class="cc-tit">Situación crítica</div><div class="cc-cat">K</div><p style="font-size:11px;color:var(--ro);line-height:1.6;margin-top:8px">Categoría máxima. Analizar exclusión del régimen.</p></div>`}
       </div>
     </div>
     <div class="sps pdf-months-section">
-      <div class="sec-t">FacturaciÃ³n mes a mes</div>
+      <div class="sec-t">Facturación mes a mes</div>
       <div class="mgrid">${mCells}</div>
     </div>
     <div class="sps pdf-chart-section">
-      <div class="sec-t">EvoluciÃ³n mensual de facturaciÃ³n</div>
+      <div class="sec-t">Evolución mensual de facturación</div>
       <canvas id="chart-bars" height="160" style="width:100%;max-width:100%"></canvas>
     </div>
     `;
 
   document.getElementById('spf').innerHTML=`
-    <button class="btn-p" id="pdf-btn">â Exportar PDF</button>
-    <button class="btn-s" id="excel-btn">â Exportar Excel</button>`;
+    <button class="btn-p" id="pdf-btn">↓ Exportar PDF</button>
+    <button class="btn-s" id="excel-btn">↓ Exportar Excel</button>`;
 
   // Set PDF button handler
   {
@@ -758,7 +758,7 @@ function buildP(nombre){
 }
 
 function renderCharts(arr,meses,tot,cat,nx,TK,sc2,ciclo){
-  // ââ BAR CHART: monthly facturaciÃ³n âââââââââââââââââââââââ
+  // ── BAR CHART: monthly facturación ───────────────────────
   const canB=document.getElementById('chart-bars');
   if(!canB||typeof Chart==='undefined') return;
 
@@ -785,7 +785,7 @@ function renderCharts(arr,meses,tot,cat,nx,TK,sc2,ciclo){
     data:{
       labels:meses,
       datasets:[{
-        label:'FacturaciÃ³n ($)',
+        label:'Facturación ($)',
         data:arr,
         backgroundColor:barColors,
         borderColor:barBorders,
@@ -944,7 +944,7 @@ async function exportPDF(nombre){
 }
 
 function exportExcel(nombre){
-  if(typeof XLSX==='undefined'){alert('Excel no disponible, intentÃ¡ de nuevo.');return;}
+  if(typeof XLSX==='undefined'){alert('Excel no disponible, intentá de nuevo.');return;}
   const ci=document.getElementById('fc').value;
   const meses=ci==='c1'?M1:M2;
   const c=CL.find(x=>x.n===nombre);
@@ -963,7 +963,7 @@ function exportExcel(nombre){
 
   const wb=XLSX.utils.book_new();
 
-  // ââ COLORS ââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── COLORS ──────────────────────────────────────────────
   const C_MARINO  = '0E1A2C';
   const C_CELESTE = '3E8CFF';
   const C_CIELO   = 'A0C8F3';
@@ -980,7 +980,7 @@ function exportExcel(nombre){
   const semBg  = s.k==='ro'?C_RO  :s.k==='al'?C_AL  :C_OK;
   const semTxt = s.k==='ro'?C_RO_TXT:s.k==='al'?C_AL_TXT:C_OK_TXT;
 
-  // ââ STYLE HELPERS ââââââââââââââââââââââââââââââââââââââââ
+  // ── STYLE HELPERS ────────────────────────────────────────
   function hdr(fgColor){
     return{font:{bold:true,color:{rgb:C_WHITE},sz:11},
            fill:{fgColor:{rgb:fgColor||C_MARINO}},
@@ -1033,9 +1033,9 @@ function exportExcel(nombre){
     if(style) ws[addr].s=style;
   }
 
-  // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ════════════════════════════════════════════════════════
   // SHEET 1: RESUMEN
-  // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ════════════════════════════════════════════════════════
   const ws1={};
   ws1['!ref']='A1:D40';
 
@@ -1045,9 +1045,9 @@ function exportExcel(nombre){
       setCellVal(ws1,col+row,'',{fill:{fgColor:{rgb:C_MARINO}},alignment:{horizontal:'left'}});
     }
   }
-  setCellVal(ws1,'A1','ZUMA+ â Monitor Monotributistas',titleCell());
+  setCellVal(ws1,'A1','ZUMA+ — Monitor Monotributistas',titleCell());
   setCellVal(ws1,'A2',`Reporte del cliente: ${c.n}`,subCell());
-  setCellVal(ws1,'A3',`Ciclo: ${ci==='c1'?'EneâDic 2025':'Jul 25âJun 26'}   Â·   Generado: ${fecha}`,subCell());
+  setCellVal(ws1,'A3',`Ciclo: ${ci==='c1'?'Ene–Dic 2025':'Jul 25–Jun 26'}   ·   Generado: ${fecha}`,subCell());
   ws1['!merges']=[
     {s:{r:0,c:0},e:{r:0,c:3}},
     {s:{r:1,c:0},e:{r:1,c:3}},
@@ -1065,7 +1065,7 @@ function exportExcel(nombre){
 
   const clientData=[
     ['Nombre',c.n],['Grupo',c.g],['Actividad',c.a],
-    ['SituaciÃ³n laboral',c.sl],['RÃ©gimen IIBB',c.iibb],
+    ['Situación laboral',c.sl],['Régimen IIBB',c.iibb],
   ];
   clientData.forEach(([k,v],i)=>{
     const r=6+i;
@@ -1081,11 +1081,11 @@ function exportExcel(nombre){
   ['B','C','D'].forEach(col=>setCellVal(ws1,col+r11,'',{fill:{fgColor:{rgb:C_CELESTE}}}));
 
   const cicloData=[
-    ['FacturaciÃ³n total','$'+fmt(tot)],
+    ['Facturación total','$'+fmt(tot)],
     ['% del tope K',fmtp(pct)],
-    ['CategorÃ­a actual',cat.c],
-    ['Tope categorÃ­a actual','$'+fmt(cat.t)],
-    ['Falta para cat. siguiente',nx?'$'+fmt(nx.t-tot):'Tope mÃ¡ximo alcanzado'],
+    ['Categoría actual',cat.c],
+    ['Tope categoría actual','$'+fmt(cat.t)],
+    ['Falta para cat. siguiente',nx?'$'+fmt(nx.t-tot):'Tope máximo alcanzado'],
     ['Falta para tope K',tot<TK?'$'+fmt(TK-tot):'Superado'],
     ['Estado',s.l],
   ];
@@ -1107,10 +1107,10 @@ function exportExcel(nombre){
   const cuotaRows=[
     ['Impuesto integrado','$'+fmt(cu.imp)],
     ...(c.sl==='Independiente'?[
-      ['JubilaciÃ³n','$'+fmt(cu.jub)],
+      ['Jubilación','$'+fmt(cu.jub)],
       ['Obra social','$'+fmt(cu.os)],
-    ]:[['JubilaciÃ³n y Obra Social','Por empleador (Rel. Dependencia)']]),
-    ['IIBB ('+c.iibb+')',ib===null?'No aplica':ib===0?'$0 â Exento':'$'+fmt(ib)],
+    ]:[['Jubilación y Obra Social','Por empleador (Rel. Dependencia)']]),
+    ['IIBB ('+c.iibb+')',ib===null?'No aplica':ib===0?'$0 — Exento':'$'+fmt(ib)],
   ];
   cuotaRows.forEach(([k,v],i)=>{
     const r=r19+1+i;
@@ -1133,9 +1133,9 @@ function exportExcel(nombre){
 
   XLSX.utils.book_append_sheet(wb,ws1,'Resumen');
 
-  // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-  // SHEET 2: FACTURACIÃN MENSUAL
-  // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ════════════════════════════════════════════════════════
+  // SHEET 2: FACTURACIÓN MENSUAL
+  // ════════════════════════════════════════════════════════
   const ws2={};
   const maxV2=Math.max(...arr,1);
 
@@ -1143,8 +1143,8 @@ function exportExcel(nombre){
   for(let col of ['A','B','C','D']){
     setCellVal(ws2,col+'1','',{fill:{fgColor:{rgb:C_MARINO}}});
   }
-  setCellVal(ws2,'A1',`FACTURACIÃN MENSUAL â ${c.n}`,titleCell());
-  setCellVal(ws2,'A2',ci==='c1'?'Ciclo 1: EneâDic 2025':'Ciclo 2: Jul 25âJun 26',subCell());
+  setCellVal(ws2,'A1',`FACTURACIÓN MENSUAL — ${c.n}`,titleCell());
+  setCellVal(ws2,'A2',ci==='c1'?'Ciclo 1: Ene–Dic 2025':'Ciclo 2: Jul 25–Jun 26',subCell());
   ['B','C','D'].forEach(col=>{
     setCellVal(ws2,col+'1','',{fill:{fgColor:{rgb:C_MARINO}}});
     setCellVal(ws2,col+'2','',{fill:{fgColor:{rgb:C_MARINO}}});
@@ -1152,7 +1152,7 @@ function exportExcel(nombre){
 
   // Headers
   ['A3','B3','C3','D3'].forEach((addr,i)=>{
-    setCellVal(ws2,addr,['Mes','FacturaciÃ³n ($)','% del tope K','Estado'][i],hdr(C_CELESTE));
+    setCellVal(ws2,addr,['Mes','Facturación ($)','% del tope K','Estado'][i],hdr(C_CELESTE));
   });
 
   arr.forEach((v,i)=>{
@@ -1182,17 +1182,17 @@ function exportExcel(nombre){
     {s:{r:0,c:0},e:{r:0,c:3}},
     {s:{r:1,c:0},e:{r:1,c:3}},
   ];
-  XLSX.utils.book_append_sheet(wb,ws2,'FacturaciÃ³n mensual');
+  XLSX.utils.book_append_sheet(wb,ws2,'Facturación mensual');
 
-  // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ════════════════════════════════════════════════════════
   // SHEET 3: ESCALAS 2026
-  // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ════════════════════════════════════════════════════════
   const ws3={};
   for(let col of ['A','B','C','D','E','F']){
     setCellVal(ws3,col+'1','',{fill:{fgColor:{rgb:C_MARINO}}});
   }
-  setCellVal(ws3,'A1','ESCALAS MONOTRIBUTO 2026 â REFERENCIA',titleCell());
-  setCellVal(ws3,'A2','Vigente desde febrero 2026 Â· Fuente: ARCA',subCell());
+  setCellVal(ws3,'A1','ESCALAS MONOTRIBUTO 2026 — REFERENCIA',titleCell());
+  setCellVal(ws3,'A2','Vigente desde febrero 2026 · Fuente: ARCA',subCell());
   ['B','C','D','E','F'].forEach(col=>{
     setCellVal(ws3,col+'1','',{fill:{fgColor:{rgb:C_MARINO}}});
     setCellVal(ws3,col+'2','',{fill:{fgColor:{rgb:C_MARINO}}});
