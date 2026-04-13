@@ -135,14 +135,16 @@ td{padding:16px 18px;vertical-align:middle}
 .dbtn{padding:8px 16px;font-size:12px;border:1.5px solid var(--gris2);border-radius:8px;background:var(--white);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:transform 160ms var(--ease-out),border-color .2s var(--ease-out),color .2s var(--ease-out),background-color .2s var(--ease-out)}
 .dbtn:active{transform:scale(0.97)}
 
-/* OVERLAY */
-.ov{position:fixed;inset:0;background:rgba(10,18,30,.5);z-index:500;opacity:0;visibility:hidden;transition:opacity .3s var(--ease-out),visibility .3s,backdrop-filter .35s var(--ease-out);backdrop-filter:blur(0px)}
-.ov.on{opacity:1;visibility:visible;backdrop-filter:blur(4px)}
-
-/* SLIDE PANEL */
-.sp{position:fixed;top:0;right:0;bottom:0;width:min(720px,100vw);background:var(--white);z-index:501;transform:translateX(105%);transition:transform .25s var(--ease-out);display:flex;flex-direction:column;box-shadow:-24px 0 80px rgba(0,0,0,.18)}
-.sp.on{transform:translateX(0);transition:transform .38s var(--ease-drawer)}
-.sph{background:var(--marino);padding:26px 28px;flex-shrink:0;position:relative}
+/* DETAIL VIEW (página nueva) */
+.dv{display:none;background:var(--white);min-height:100vh}
+.dv.on{display:block}
+.dv-back-wrap{max-width:1440px;margin:0 auto;padding:20px 32px 0}
+.back-btn{background:var(--marino);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:transform 160ms var(--ease-out),background .2s var(--ease-out)}
+.back-btn:hover{background:var(--marino3)}
+.back-btn:active{transform:scale(0.97)}
+.dv-inner{max-width:1440px;margin:0 auto;padding-bottom:48px}
+.sp{background:var(--white);display:flex;flex-direction:column;width:100%}
+.sph{background:var(--marino);padding:26px 32px;flex-shrink:0;position:relative}
 .sph::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(62,140,255,.4),transparent)}
 .sph-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
 .sph-name{color:#fff;font-size:21px;font-weight:600;line-height:1.2;flex:1}
@@ -158,11 +160,13 @@ td{padding:16px 18px;vertical-align:middle}
 .sph-fill{height:7px;border-radius:4px;transition:width .7s var(--ease-out) .1s}
 
 /* Panel body */
-.spb{flex:1;overflow-y:auto;padding:0}
-.spb::-webkit-scrollbar{width:4px}
-.spb::-webkit-scrollbar-thumb{background:var(--gris2);border-radius:2px}
-.sps{padding:24px 28px;border-bottom:1px solid var(--gris)}
+.spb{flex:1;padding:0;max-width:960px;margin:0 auto;width:100%}
+.sps{padding:24px 32px;border-bottom:1px solid var(--gris2)}
 .sps:last-child{border-bottom:none}
+/* Sección Tope 12M - fondo blanco */
+.sps-12m{background:var(--white);border:1px solid var(--gris2);border-radius:12px;margin:20px 32px;padding:24px 28px}
+.sps-12m+.sps{border-top:1px solid var(--gris2)}
+.cuota-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;padding-left:2px}
 .sec-t{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .sec-t::after{content:'';flex:1;height:1px;background:var(--gris2)}
 
@@ -226,7 +230,7 @@ td{padding:16px 18px;vertical-align:middle}
 .mc.ms-m .mc-v{color:var(--inc)}
 
 /* Panel footer */
-.spf{padding:18px 28px;border-top:1px solid var(--gris2);display:flex;gap:10px;flex-shrink:0}
+.spf{padding:24px 32px;border-top:1px solid var(--gris2);display:flex;gap:10px;max-width:960px;margin:0 auto;width:100%}
 .btn-p{flex:1;padding:13px;font-size:13px;background:var(--marino);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:transform 160ms var(--ease-out),background-color .2s var(--ease-out)}
 .btn-p:hover{background:var(--marino3)}
 .btn-p:active{transform:scale(0.97)}
@@ -250,7 +254,6 @@ td{padding:16px 18px;vertical-align:middle}
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.15s!important}
   .hero-stat{opacity:1!important;transform:none!important}
   tbody tr{opacity:1!important;transform:none!important;animation:none!important}
-  .sp{transition-duration:0.01ms!important}
   .mc:hover{transform:none!important}
 }
 
@@ -260,7 +263,6 @@ td{padding:16px 18px;vertical-align:middle}
   .kgrid{grid-template-columns:1fr 1fr}
   .cgrid{grid-template-columns:1fr}
   .mgrid{grid-template-columns:repeat(4,1fr)}
-  .sp{width:100vw}
   th:nth-child(3),td:nth-child(3){display:none}
   th:nth-child(6),td:nth-child(6){display:none}
 }
@@ -270,8 +272,9 @@ td{padding:16px 18px;vertical-align:middle}
   th:nth-child(5),td:nth-child(5){display:none}
 }
 @media print{
-  .nav,.hero,.tb-wrap,.main,.ov,.err-b{display:none!important}
-  .sp{position:static;width:100%;transform:none;box-shadow:none;display:flex!important}
+  .nav,.hero,.tb-wrap,.main,.err-b,.dv-back-wrap{display:none!important}
+  .dv{display:block!important}
+  .sp{display:flex!important}
   .sph{background:#0E1A2C!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 
@@ -279,10 +282,10 @@ td{padding:16px 18px;vertical-align:middle}
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   body { background: #fff !important; }
-  .nav, .hero, .tb-wrap, .main, .ov, .err-b { display: none !important; }
-  .sp { position: static !important; width: 100% !important; transform: none !important;
-        box-shadow: none !important; display: flex !important; height: auto !important; overflow: visible !important; }
-  .spb { overflow: visible !important; height: auto !important; }
+  .nav, .hero, .tb-wrap, .main, .err-b, .dv-back-wrap { display: none !important; }
+  .dv { display: block !important; }
+  .sp { display: flex !important; }
+  .spb { height: auto !important; }
   .spf { display: none !important; }
   .sph { background: #0E1A2C !important; padding: 24px 28px !important; }
   .b-ok { background: #F0FDF4 !important; color: #16A34A !important; border: 1px solid #BBF7D0 !important; }
@@ -357,7 +360,7 @@ td{padding:16px 18px;vertical-align:middle}
 <div class="tb-wrap">
   <div class="tb-inner">
     <div class="tf-g"><label>Grupo</label>
-      <select id="fg" onchange="render()"><option value="">Todos</option></select></div>
+      <select id="fg" onchange="onGroupChange()"><option value="">Todos</option></select></div>
     <div class="tf-g"><label>Ciclo</label>
       <select id="fc" onchange="onCC()">
         <option value="auto" selected>Ciclo activo (automático)</option>
@@ -375,6 +378,7 @@ td{padding:16px 18px;vertical-align:middle}
       </select></div>
     <div class="tf-g">
       <input type="text" id="fq" placeholder="Buscar cliente..." oninput="render()" style="min-width:180px"></div>
+    <button id="btn-group-pdf" onclick="exportGroupPDF()" disabled title="Seleccioná un grupo para exportar" style="background:var(--marino);color:#fff;border:1.5px solid var(--marino);border-radius:20px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;min-height:40px;transition:var(--ease);opacity:0.5;white-space:nowrap">↓ Exportar grupo</button>
     <span class="tb-cnt" id="tcnt"></span>
   </div>
 </div>
@@ -399,11 +403,17 @@ td{padding:16px 18px;vertical-align:middle}
   </div>
 </div>
 
-<div class="ov" id="ov" onclick="closeP()"></div>
-<div class="sp" id="sp">
-  <div class="sph" id="sph"></div>
-  <div class="spb" id="spb"></div>
-  <div class="spf" id="spf"></div>
+<div class="dv" id="dv">
+  <div class="dv-back-wrap">
+    <button class="back-btn" onclick="closeP()">← Volver</button>
+  </div>
+  <div class="dv-inner">
+    <div class="sp" id="sp">
+      <div class="sph" id="sph"></div>
+      <div class="spb" id="spb"></div>
+      <div class="spf" id="spf"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -510,6 +520,14 @@ async function loadAll(){
     hideE();render();
     document.querySelectorAll('.hero-stat,.hero-right').forEach((el,i)=>{setTimeout(()=>el.classList.add('entered'),i*60);});
     setTimeout(()=>sL(false),500);
+    // Detectar parámetro ?cliente= en URL para mostrar detalle directamente
+    const params=new URLSearchParams(window.location.search);
+    const clienteURL=params.get('cliente');
+    if(clienteURL){
+      const existe=CL.find(x=>x.n===clienteURL);
+      if(existe) showDetail(clienteURL);
+      else history.replaceState({},'',window.location.pathname);
+    }
   }catch(e){showE('Error: '+e.message);sL(false);}
   if(btn)btn.textContent='↻ Actualizar';
 }
@@ -615,23 +633,43 @@ function render(){
   }).join('');
 }
 
-function openP(nombre){
+function showDetail(nombre){
   sel=nombre;
-  document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('sel'));
-  [...document.querySelectorAll('tbody tr')].find(r=>r.querySelector('.cname')?.textContent===nombre)?.classList.add('sel');
+  const c=CL.find(x=>x.n===nombre);
+  if(!c){closeP();return;}
   buildP(nombre);
-  document.getElementById('ov').classList.add('on');
-  document.getElementById('sp').classList.add('on');
-  document.body.style.overflow='hidden';
+  document.querySelector('.nav').style.display='';
+  document.querySelector('.hero').style.display='none';
+  document.querySelector('.tb-wrap').style.display='none';
+  document.querySelector('.main').style.display='none';
+  document.getElementById('dv').classList.add('on');
+  window.scrollTo(0,0);
+}
+function showList(){
+  sel=null;
+  document.getElementById('dv').classList.remove('on');
+  document.querySelector('.hero').style.display='';
+  document.querySelector('.tb-wrap').style.display='';
+  document.querySelector('.main').style.display='';
+  document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('sel'));
+}
+function openP(nombre){
+  history.pushState({cliente:nombre},'','?cliente='+encodeURIComponent(nombre));
+  showDetail(nombre);
 }
 function closeP(){
-  sel=null;
-  document.getElementById('ov').classList.remove('on');
-  document.getElementById('sp').classList.remove('on');
-  document.body.style.overflow='';
-  document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('sel'));
+  if(window.location.search.includes('cliente=')){
+    history.pushState({},'',window.location.pathname);
+  }
+  showList();
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeP();});
+window.addEventListener('popstate',e=>{
+  const params=new URLSearchParams(window.location.search);
+  const cliente=params.get('cliente');
+  if(cliente && CL.length){showDetail(cliente);}
+  else{showList();}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && document.getElementById('dv').classList.contains('on'))closeP();});
 
 function buildP(nombre){
   const ci=document.getElementById('fc').value,meses=ci==='c1'?M1:M2,pc=ci==='c1'?PAST_C1:PAST_C2;
@@ -654,7 +692,6 @@ function buildP(nombre){
     </div>
     <div class="sph-top">
       <div class="sph-name">${c.n}</div>
-      <button class="sph-x" onclick="closeP()">✕</button>
     </div>
     <div class="sph-tags">
       <span class="sph-tag">${c.g}</span><span class="sph-tag">${c.a}</span>
@@ -687,41 +724,64 @@ function buildP(nombre){
         <div class="kc"><div class="kl">Falta para tope K</div><div class="kv" style="color:${fMax>0?'var(--text)':'var(--ro)'}">${fMax>0?'$'+fmtk(fMax):'Superado'}</div><div class="ks">$${fmtk(TK)}</div></div>
       </div>
     </div>
-    <div class="sps pdf-12m-section" style="background:linear-gradient(135deg,#0E1A2C,#1a2d44);border-radius:10px">
-      <div class="sec-t" style="color:rgba(160,200,243,.6)">% Tope Régimen Simplificado (12M corridos)</div>
-      ${(()=>{const dd=DASH[nombre]||{acum12m:0,pct12m:0,sem12m:''};const k12=sem12k(dd.sem12m);const c12=sCol(k12);return`
+    <div class="sps pdf-12m-section sps-12m">
+      ${(()=>{
+        const dd=DASH[nombre]||{acum12m:0,pct12m:0,sem12m:''};
+        const k12=sem12k(dd.sem12m);const c12=sCol(k12);
+        // Calcular período 12M corridos dinámicamente (últimos 12 meses hasta mes anterior)
+        const mesesAbbr=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const now=new Date();
+        const endM=new Date(now.getFullYear(), now.getMonth()-1, 1);
+        const startM=new Date(endM.getFullYear(), endM.getMonth()-11, 1);
+        const periodo=`${mesesAbbr[startM.getMonth()]} ${startM.getFullYear()} – ${mesesAbbr[endM.getMonth()]} ${endM.getFullYear()}`;
+        return`
+      <div class="sec-t" style="margin-bottom:4px">Tope de facturación — Régimen Simplificado</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:16px;font-family:'DM Mono',monospace">Últimos 12 meses corridos · ${periodo}</div>
       <div class="kgrid">
-        <div class="kc dark"><div class="kl">Acumulado 12M</div><div class="kv">${fmtk(dd.acum12m)}</div><div class="ks">${fmt(dd.acum12m)}</div></div>
-        <div class="kc dark"><div class="kl">% Tope K (12M)</div><div class="kv" style="color:${c12}">${fmtp(dd.pct12m)}</div><div class="ks"><span class="b b-${k12}" style="font-size:10px;padding:3px 8px">${sem12lbl(dd.sem12m)}</span></div></div>
+        <div class="kc"><div class="kl">Acumulado 12M</div><div class="kv">$${fmtk(dd.acum12m)}</div><div class="ks">$${fmt(dd.acum12m)}</div></div>
+        <div class="kc"><div class="kl">% sobre tope Cat. K</div><div class="kv" style="color:${c12}">${fmtp(dd.pct12m)}</div><div class="ks"><span class="b b-${k12}" style="font-size:10px;padding:3px 8px">${sem12lbl(dd.sem12m)}</span></div></div>
       </div>
-      <div class="pr" style="margin-top:12px"><div class="prh"><span style="color:rgba(255,255,255,.5)">% del tope K (ventana 12M)</span><strong style="color:#fff">${fmtp(dd.pct12m)}</strong></div><div class="prb" style="background:rgba(255,255,255,.1)"><div class="prf" style="width:${Math.min(dd.pct12m*100,100).toFixed(1)}%;background:${c12}"></div></div></div>
-      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.35);line-height:1.5">Suma los 12 meses anteriores al mes configurado en DASHBOARD. Tope Cat. K: ${fmtk(TK)}</div>`;})()}
+      <div class="pr" style="margin-top:14px"><div class="prh"><span>% del tope K (ventana 12M)</span><strong>${fmtp(dd.pct12m)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(dd.pct12m*100,100).toFixed(1)}%;background:${c12}"></div></div></div>
+      <div style="margin-top:10px;font-size:11px;color:var(--text3);line-height:1.5">Suma los 12 meses anteriores al mes actual. Tope Cat. K: $${fmtk(TK)}</div>`;
+      })()}
     </div>
     <div class="sps pdf-prog-section">
       <div class="sec-t">Progreso</div>
-      <div class="pr"><div class="prh"><span>% del tope Cat. K</span><strong>${fmtp(pct)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(pct*100,100).toFixed(1)}%;background:${sc2}"></div></div></div>
-      ${nx?`<div class="pr"><div class="prh"><span>% hacia cat. siguiente (${nx.c})</span><strong>${fmtp(pCat)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(pCat*100,100).toFixed(1)}%;background:${sc2}"></div></div></div>`:''}
+      ${nx?`<div class="pr"><div class="prh"><span>% hacia categoría siguiente (Cat. ${nx.c})</span><strong>${fmtp(pCat)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(pCat*100,100).toFixed(1)}%;background:${sc2}"></div></div></div>`:''}
+      ${(()=>{
+        const mesesAbbr=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const mesesArr=ci==='c1'?M1:M2;
+        const firstM=mesesArr[0].split('-')[0];
+        const lastPastM=pc>0?mesesArr[pc-1].split('-')[0]:firstM;
+        return`<div class="pr"><div class="prh"><span>% del tope Cat. K — ciclo actual <span style="color:var(--text3);font-weight:400">(${pc} de 12 meses — ${firstM} a ${lastPastM})</span></span><strong>${fmtp(pct)}</strong></div><div class="prb"><div class="prf" style="width:${Math.min(pct*100,100).toFixed(1)}%;background:${sc2}"></div></div></div>`;
+      })()}
       ${inc?`<div class="al-box inc"><span>⚠</span><span>Hay meses pasados sin completar. El total puede ser incorrecto.</span></div>`:''}
       ${pct>=0.8?`<div class="al-box ro"><span>🚨</span><span>Categoría en riesgo. Revisar con el cliente y analizar recategorización.</span></div>`:''}
     </div>
     <div class="sps pdf-cuota-section">
       <div class="sec-t">Cuotas mensuales</div>
       <div class="cgrid">
-        <div class="cc">
-          <div class="cc-tit">Cat. actual — ${cat.c}</div><div class="cc-cat">${cat.c}</div>
-          <div class="ccl"><span class="ccn">Imp. integrado</span><span class="cca">$${fmt(cu.imp)}</span></div>
-          ${eI?`<div class="ccl"><span class="ccn">Jubilación</span><span class="cca">$${fmt(cu.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cu.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
-          <div class="cc-sub"><span class="ccn">IIBB</span><span class="cca">${ib===null?'No aplica':ib===0?'Exento':'$'+fmt(ib)}</span></div>
-          <div class="cc-tot"><span class="ccn">TOTAL / MES</span><span class="cca">$${fmt(totM)}</span></div>
+        <div>
+          <div class="cuota-label">Cat. Actual — ${cat.c}</div>
+          <div class="cc">
+            <div class="cc-cat">${cat.c}</div>
+            <div class="ccl"><span class="ccn">Imp. integrado</span><span class="cca">$${fmt(cu.imp)}</span></div>
+            ${eI?`<div class="ccl"><span class="ccn">Jubilación</span><span class="cca">$${fmt(cu.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cu.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
+            <div class="cc-sub"><span class="ccn">IIBB</span><span class="cca">${ib===null?'No aplica':ib===0?'Exento':'$'+fmt(ib)}</span></div>
+            <div class="cc-tot"><span class="ccn">TOTAL / MES</span><span class="cca">$${fmt(totM)}</span></div>
+          </div>
         </div>
-        ${nx?`<div class="cc nx">
-          <div class="cc-tit">Si sube a cat. ${nx.c}</div><div class="cc-cat">${nx.c}</div>
-          <div class="ccl"><span class="ccn">Imp. integrado</span><span class="cca">$${fmt(cuN.imp)}</span></div>
-          ${eI?`<div class="ccl"><span class="ccn">Jubilación</span><span class="cca">$${fmt(cuN.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cuN.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
-          <div class="cc-sub"><span class="ccn">IIBB</span><span class="cca">${ibN===null?'No aplica':ibN===0?'Exento':'$'+fmt(ibN||0)}</span></div>
-          <div class="cc-tot"><span class="ccn">TOTAL / MES</span><span class="cca">$${fmt(totNM)}</span></div>
-          <div class="cc-diff">+$${fmt(totNM-totM)}/mes adicionales</div>
-        </div>`:`<div class="cc crit"><div class="cc-tit">Situación crítica</div><div class="cc-cat">K</div><p style="font-size:11px;color:var(--ro);line-height:1.6;margin-top:8px">Categoría máxima. Analizar exclusión del régimen.</p></div>`}
+        ${nx?`<div>
+          <div class="cuota-label">Si sube a Cat. ${nx.c}</div>
+          <div class="cc nx">
+            <div class="cc-cat">${nx.c}</div>
+            <div class="ccl"><span class="ccn">Imp. integrado</span><span class="cca">$${fmt(cuN.imp)}</span></div>
+            ${eI?`<div class="ccl"><span class="ccn">Jubilación</span><span class="cca">$${fmt(cuN.jub)}</span></div><div class="ccl"><span class="ccn">Obra social</span><span class="cca">$${fmt(cuN.os)}</span></div>`:`<div class="ccl"><span class="ccn">Jub. y OS</span><span class="cca" style="color:var(--text3)">Por empleador</span></div>`}
+            <div class="cc-sub"><span class="ccn">IIBB</span><span class="cca">${ibN===null?'No aplica':ibN===0?'Exento':'$'+fmt(ibN||0)}</span></div>
+            <div class="cc-tot"><span class="ccn">TOTAL / MES</span><span class="cca">$${fmt(totNM)}</span></div>
+            <div class="cc-diff">+$${fmt(totNM-totM)}/mes adicionales</div>
+          </div>
+        </div>`:`<div><div class="cuota-label">Situación crítica</div><div class="cc crit"><div class="cc-cat">K</div><p style="font-size:11px;color:var(--ro);line-height:1.6;margin-top:8px">Categoría máxima. Analizar exclusión del régimen.</p></div></div>`}
       </div>
     </div>
     <div class="sps pdf-months-section">
@@ -1162,7 +1222,6 @@ function exportExcel(nombre){
     const fg=v===0?'94A3B8':p>=0.08?C_RO_TXT:p>=0.05?C_AL_TXT:C_OK_TXT;
     const estado=v===0?'Sin datos':p>=0.08?'Alto':p>=0.05?'Medio':'Normal';
     setCellVal(ws2,`A${r}`,meses[i],cell(true,i%2===0?C_GRIS2:C_WHITE,'475569'));
-    setCellVal(ws2,`B${r}`,v,{...numCell(bg,fg),font:{bold:v>0,color:{rgb:fg},sz:10}});
     setCellVal(ws2,`C${r}`,+(p*100).toFixed(2),{...numCell(bg,fg),font:{bold:false,color:{rgb:fg},sz:10}});
     setCellVal(ws2,`D${r}`,estado,cell(false,bg,fg));
   });
@@ -1228,6 +1287,167 @@ function exportExcel(nombre){
   XLSX.utils.book_append_sheet(wb,ws3,'Escalas 2026');
 
   XLSX.writeFile(wb,`Zuma_${c.n.replace(/\s+/g,'_')}_${fecha}.xlsx`);
+}
+
+function onGroupChange(){
+  updateGroupExportBtn();
+  render();
+}
+
+function updateGroupExportBtn(){
+  const btn=document.getElementById('btn-group-pdf');
+  if(!btn) return;
+  const g=(document.getElementById('fg')||{}).value||'';
+  if(g && g!==''){
+    btn.disabled=false;
+    btn.style.opacity='1';
+    btn.style.cursor='pointer';
+    btn.title='Exportar reporte del grupo '+g;
+  } else {
+    btn.disabled=true;
+    btn.style.opacity='0.5';
+    btn.style.cursor='not-allowed';
+    btn.title='Seleccioná un grupo para exportar';
+  }
+}
+
+function exportGroupPDF(){
+  const g=(document.getElementById('fg')||{}).value||'';
+  if(!g){ alert('Seleccioná un grupo primero.'); return; }
+  const clientes=CL.filter(c=>c.g===g).slice().sort((a,b)=>a.n.localeCompare(b.n,'es'));
+  if(clientes.length===0){ alert('No hay clientes en el grupo '+g); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=doc.internal.pageSize.getWidth();
+  const H=doc.internal.pageSize.getHeight();
+  const marL=10, marR=10;
+  const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const now=new Date();
+  const fechaStr=`${meses[now.getMonth()]} ${now.getFullYear()}`;
+  const fechaFile=`${meses[now.getMonth()]}${now.getFullYear()}`;
+
+  // Header navy
+  doc.setFillColor(11,42,79);
+  doc.rect(0,0,W,22,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.text('ZUMA+',marL,13);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(10);
+  doc.text('Reporte de grupo',marL,19);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(13);
+  doc.text(g,W/2,13,{align:'center'});
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.text(fechaStr,W-marR,13,{align:'right'});
+  doc.text(`${clientes.length} cliente${clientes.length===1?'':'s'}`,W-marR,19,{align:'right'});
+
+  // Column definitions
+  const headers=['Nombre','Grupo','Cat.','% Tope RS (12M)','Total ciclo ($)','% Tope K (ciclo)','Estado','Cuota mensual ($)'];
+  const widths=[55,30,15,32,36,30,28,40];
+  const totalW=widths.reduce((a,b)=>a+b,0);
+  const startX=marL;
+
+  let y=32;
+  const drawHeader=()=>{
+    doc.setFillColor(11,42,79);
+    doc.rect(startX,y,totalW,8,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    let x=startX;
+    headers.forEach((h,i)=>{
+      doc.text(h,x+2,y+5.2);
+      x+=widths[i];
+    });
+    y+=8;
+  };
+  drawHeader();
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  const rowH=7;
+  const fmtAR=v=>{
+    if(!isFinite(v)||v==null) return '—';
+    return '$'+Math.round(v).toLocaleString('es-AR');
+  };
+  const fmtPct=v=>{
+    if(!isFinite(v)||v==null) return '—';
+    return (v*100).toFixed(1)+'%';
+  };
+
+  clientes.forEach((c,idx)=>{
+    if(y+rowH>H-12){
+      doc.addPage();
+      y=12;
+      drawHeader();
+    }
+    // Compute per-client figures using existing helpers
+    const ci=(typeof resolveCiclo==='function')?resolveCiclo(c):'c2';
+    const arr=c[ci]||[];
+    const tot=arr.reduce((s,v)=>s+(+v||0),0);
+    const pctK=TK>0?tot/TK:0;
+    const s=(typeof gS==='function')?gS(c,ci):{l:'—',k:'ok'};
+    const cat=(typeof gCi==='function')?gCi(c,ci):'—';
+    const cuota=(typeof gCu==='function')?gCu(c,ci):0;
+    const p12=+c.pct12m||0;
+    const sem12=c.sem12||c.sem12m||'ok';
+
+    // Zebra
+    if(idx%2===0){
+      doc.setFillColor(248,250,252);
+      doc.rect(startX,y,totalW,rowH,'F');
+    }
+
+    doc.setTextColor(30,41,59);
+    let x=startX;
+    const cells=[
+      {t:c.n||'—',a:'left'},
+      {t:c.g||'—',a:'left'},
+      {t:cat,a:'center'},
+      {t:fmtPct(p12),a:'right',bg:sem12},
+      {t:fmtAR(tot),a:'right'},
+      {t:fmtPct(pctK),a:'right'},
+      {t:s.l||'—',a:'center',bg:s.k},
+      {t:fmtAR(cuota),a:'right'},
+    ];
+    cells.forEach((cell,i)=>{
+      if(cell.bg){
+        const rgb=cell.bg==='ro'?[254,226,226]:cell.bg==='al'?[254,243,199]:[220,252,231];
+        doc.setFillColor(rgb[0],rgb[1],rgb[2]);
+        doc.rect(x+1,y+1,widths[i]-2,rowH-2,'F');
+        const tc=cell.bg==='ro'?[153,27,27]:cell.bg==='al'?[146,64,14]:[22,101,52];
+        doc.setTextColor(tc[0],tc[1],tc[2]);
+        doc.setFont('helvetica','bold');
+      } else {
+        doc.setTextColor(30,41,59);
+        doc.setFont('helvetica','normal');
+      }
+      const tx=cell.a==='right'?x+widths[i]-2:cell.a==='center'?x+widths[i]/2:x+2;
+      const txt=String(cell.t).length>30?String(cell.t).substring(0,28)+'…':String(cell.t);
+      doc.text(txt,tx,y+rowH-2.2,{align:cell.a});
+      x+=widths[i];
+    });
+    doc.setDrawColor(226,232,240);
+    doc.setLineWidth(0.1);
+    doc.line(startX,y+rowH,startX+totalW,y+rowH);
+    y+=rowH;
+  });
+
+  // Footer
+  const pgs=doc.getNumberOfPages();
+  for(let i=1;i<=pgs;i++){
+    doc.setPage(i);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7);
+    doc.setTextColor(148,163,184);
+    doc.text(`Página ${i} de ${pgs} · Generado ${fechaStr}`,W/2,H-5,{align:'center'});
+  }
+
+  doc.save(`Reporte_Grupo_${g.replace(/\s+/g,'_')}_${fechaFile}.pdf`);
 }
 
 onCC();loadAll();
