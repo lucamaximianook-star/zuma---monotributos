@@ -394,7 +394,7 @@ td{padding:16px 18px;vertical-align:middle}
           <th id="thc" onclick="sortBy('c')" style="text-align:center">Cat.</th>
           <th id="th12" onclick="sortBy('m')" style="text-align:right">% Tope Reg Sim</th>
           <th id="tht" onclick="sortBy('t')" style="text-align:right">Total <span id="thlbl">Jul–Jun</span></th>
-          <th id="thp" onclick="sortBy('p')" style="text-align:right">% Tope K</th>
+          <th id="thp" onclick="sortBy('p')" style="text-align:right">Le queda</th>
           <th>Estado</th>
           <th></th>
         </tr></thead>
@@ -680,10 +680,17 @@ function gFilt(){
     const arr=ci==='c1'?c.c1:c.c2,miss=ci==='c1'?c.m1:c.m2;
     const tot=arr.reduce((a,b)=>a+b,0),pct=TK>0?tot/TK:0;
     const cSheet=gCiByName(c.catSheet),cIdx=cSheet>-1?cSheet:gCi(tot),inc=gInc(arr,miss,ci);
-    return{...c,arr,miss,tot,pct,ci:cIdx,inc,s:gS(pct,inc,gNd(miss,cIdx)),acum12m:c.acum12m||0,pct12m:c.pct12m||0,sem12m:c.sem12m||'',supera:cSheet>-1&&cSheet<gCi(tot),catActual:c.catSheet||''};
+    // Cálculo "cuánto le queda": tope de su categoría actual - facturación del ciclo
+    const catRefIdx=cSheet>-1?cSheet:gCi(tot);
+    const topeCatActual=CATS[catRefIdx]?CATS[catRefIdx].t:0;
+    const leQueda=topeCatActual-tot;
+    const pctCat=topeCatActual>0?tot/topeCatActual:0;
+    // Semáforo respecto a su categoría (para el círculo al lado del total)
+    const semCatK=pctCat>=1?'ro':pctCat>=0.85?'al':'ok';
+    return{...c,arr,miss,tot,pct,ci:cIdx,inc,s:gS(pct,inc,gNd(miss,cIdx)),acum12m:c.acum12m||0,pct12m:c.pct12m||0,sem12m:c.sem12m||'',supera:cSheet>-1&&cSheet<gCi(tot),catActual:c.catSheet||'',leQueda,pctCat,semCatK,topeCatActual};
   }).sort((a,b)=>{
     if(sc==='n')return sd*a.n.localeCompare(b.n);if(sc==='g')return sd*a.g.localeCompare(b.g);
-    if(sc==='t')return sd*(a.tot-b.tot);if(sc==='p')return sd*(a.pct-b.pct);
+    if(sc==='t')return sd*(a.tot-b.tot);if(sc==='p')return sd*(a.leQueda-b.leQueda);
     if(sc==='c')return sd*(a.ci-b.ci);if(sc==='m')return sd*(a.acum12m-b.acum12m);return 0;
   });
 }
@@ -715,8 +722,8 @@ function render(){
       <td><span class="b b-g">${d.g}</span></td>
       <td style="text-align:center"><span class="b b-cat">${cL}</span></td>
       <td style="text-align:right"><div class="pc" style="color:${sCol(sem12k(d.sem12m))};font-size:15px;font-weight:700">${fmtp(d.pct12m)}</div><div class="pi"><div class="pt" style="height:6px"><div class="pf" style="width:${Math.min(d.pct12m*100,100).toFixed(1)}%;background:${sCol(sem12k(d.sem12m))}"></div></div></div><div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px">${fmtk(d.acum12m)}</div><span class="b b-${sem12k(d.sem12m)}" style="font-size:11px;padding:4px 10px;margin-top:3px;display:inline-flex;border-width:2px">${sem12lbl(d.sem12m)}</span></td>
-      <td class="am">${fmt(d.tot)}</td>
-      <td class="pc" style="color:${sc2}">${fmtp(d.pct)}</td>
+      <td class="am"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${sCol(d.semCatK)};flex-shrink:0" title="Estado respecto a Cat ${d.catActual||'?'}"></span><span>${fmt(d.tot)}</span></div></td>
+      <td class="am" style="color:${d.leQueda<0?'var(--ro)':'var(--text)'};font-weight:600">${d.leQueda<0?'-':''}${fmt(Math.abs(d.leQueda))}<div style="font-size:10px;color:var(--text3);font-weight:400;margin-top:2px">hasta tope Cat ${d.catActual||'?'}</div></td>
       <td><span class="b b-${d.s.k}">${d.s.l}</span>${d.supera?`<span class="b b-ro" style="margin-left:6px;font-size:10px;padding:2px 6px;">Superó Cat. ${d.catActual}</span>`:''}</td>
       <td><button class="dbtn" onclick="openP('${d.n.replace(/'/g,"\\'")}')">Ver →</button></td>
     </tr>`;
@@ -743,6 +750,59 @@ function showList(){
   document.querySelector('.main').style.display='';
   document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('sel'));
 }
+function updateSim(nombre){
+  const c=CL.find(x=>x.n===nombre);if(!c)return;
+  const sel=document.getElementById('simCatSelect');if(!sel)return;
+  const catElegida=sel.value;
+  const catData=CATS.find(cc=>cc.c===catElegida);if(!catData)return;
+  const ci=resolveCiclo(document.getElementById('fc').value);
+  const arr=ci==='c1'?c.c1:c.c2;const miss=ci==='c1'?c.m1:c.m2;
+  const tot=arr.reduce((a,b)=>a+b,0);
+  const tope=catData.t;
+  const leQueda=tope-tot;
+  const pct=tope>0?tot/tope:0;
+  const cicloLbl=ci==='c1'?(M1[0]+' → '+M1[11]):(M2[0]+' → '+M2[11]);
+  // Meses completados en el ciclo y meses restantes
+  const past=ci==='c1'?PAST_C1:PAST_C2;
+  const mesesRestantes=Math.max(1,12-past);
+  const promedioMensualRestante=leQueda>0?leQueda/mesesRestantes:0;
+  // Promedio de facturación mensual actual (basado en los meses ya pasados)
+  const facturadosArr=arr.slice(0,past).filter(x=>x>0);
+  const promedioActual=facturadosArr.length>0?facturadosArr.reduce((a,b)=>a+b,0)/facturadosArr.length:0;
+  // Color según % del tope
+  const color=pct>=1?'var(--ro)':pct>=0.85?'var(--al)':'var(--ok)';
+  const iconoQueda=leQueda>=0?'✓':'⚠';
+  let html='';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">';
+  html+='<div style="background:white;padding:14px;border-radius:10px;border:1px solid #E8EBF1"><div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Tope Cat '+catElegida+'</div><div style="font-size:18px;font-weight:700;color:var(--marino);font-family:\'DM Mono\',monospace">$'+fmt(tope)+'</div></div>';
+  html+='<div style="background:white;padding:14px;border-radius:10px;border:1px solid #E8EBF1"><div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Facturado en '+cicloLbl+'</div><div style="font-size:18px;font-weight:700;color:var(--marino);font-family:\'DM Mono\',monospace">$'+fmt(tot)+'</div></div>';
+  html+='</div>';
+  // Barra de progreso
+  html+='<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;color:var(--text3);font-weight:600">% del tope</span><strong style="color:'+color+'">'+fmtp(pct)+'</strong></div><div style="height:10px;background:#E8EBF1;border-radius:5px;overflow:hidden"><div style="height:100%;width:'+Math.min(pct*100,100).toFixed(1)+'%;background:'+color+';border-radius:5px;transition:width .3s"></div></div></div>';
+  // Le queda
+  html+='<div style="background:white;padding:16px;border-radius:10px;border:2px solid '+color+';margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px">'+(leQueda>=0?'Le queda para facturar':'Excedido del tope')+'</div><div style="font-size:22px;font-weight:700;color:'+color+';font-family:\'DM Mono\',monospace;margin-top:4px">'+iconoQueda+' $'+fmt(Math.abs(leQueda))+'</div></div></div></div>';
+  // Proyección
+  if(leQueda>0 && mesesRestantes>0){
+    html+='<div style="background:#F1F5F9;padding:14px;border-radius:10px;border:1px solid #CBD5E1"><div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📊 Proyección</div>';
+    html+='<div style="font-size:13px;color:var(--text);line-height:1.7">';
+    html+='Quedan <strong>'+mesesRestantes+' '+(mesesRestantes===1?'mes':'meses')+'</strong> del ciclo. ';
+    html+='Puede facturar hasta <strong>$'+fmt(promedioMensualRestante)+'/mes</strong> promedio sin pasarse.';
+    if(promedioActual>0){
+      html+='<br><br>Su ritmo actual es de <strong>$'+fmt(promedioActual)+'/mes</strong>. ';
+      const proyeccionFin=promedioActual*12;
+      if(proyeccionFin>tope){
+        html+='<span style="color:var(--ro);font-weight:600">Al ritmo actual, cerraría el ciclo en $'+fmt(proyeccionFin)+' → superaría el tope.</span>';
+      }else{
+        html+='<span style="color:var(--ok);font-weight:600">Al ritmo actual, cerraría el ciclo en $'+fmt(proyeccionFin)+' → dentro del tope.</span>';
+      }
+    }
+    html+='</div></div>';
+  }else if(leQueda<=0){
+    html+='<div style="background:#FEE2E2;padding:14px;border-radius:10px;border:1px solid var(--ro)"><div style="font-size:13px;color:var(--ro);font-weight:600">🚨 Ya superó el tope de Cat '+catElegida+'. Corresponde recategorización.</div></div>';
+  }
+  document.getElementById('simResult').innerHTML=html;
+}
+
 function openP(nombre){
   history.pushState({cliente:nombre},'','?cliente='+encodeURIComponent(nombre));
   showDetail(nombre);
@@ -852,6 +912,22 @@ function buildP(nombre){
       })()}
       ${inc?`<div class="al-box inc"><span>⚠</span><span>Hay meses pasados sin completar. El total puede ser incorrecto.</span></div>`:''}
       ${pct>=0.8?`<div class="al-box ro"><span>🚨</span><span>Categoría en riesgo. Revisar con el cliente y analizar recategorización.</span></div>`:''}
+    </div>
+    <div class="sps pdf-cuota-section">
+      <div class="sec-t">Simulador de recategorización</div>
+      <div style="background:linear-gradient(135deg,#F1F5F9 0%,#E8EBF1 100%);border-radius:14px;padding:20px;border:2px solid #CBD5E1">
+        <div style="font-size:12px;color:var(--text3);margin-bottom:6px">
+          Cliente en <strong style="color:var(--text)">Cat ${cat.c}</strong> — 
+          Facturado en ciclo actual: <strong style="color:var(--text)">$${fmt(tot)}</strong>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0 18px 0;flex-wrap:wrap">
+          <label style="font-size:12px;font-weight:600;color:var(--text2)">Simular tope de categoría:</label>
+          <select id="simCatSelect" onchange="updateSim('${nombre.replace(/'/g,"\\'")}')" style="padding:8px 12px;border:2px solid var(--celeste);border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;background:white;color:var(--marino);cursor:pointer">
+            ${CATS.map(cc=>`<option value="${cc.c}" ${cc.c===cat.c?'selected':''}>Cat ${cc.c}</option>`).join('')}
+          </select>
+        </div>
+        <div id="simResult"></div>
+      </div>
     </div>
     <div class="sps pdf-cuota-section">
       <div class="sec-t">Cuotas mensuales</div>
@@ -975,6 +1051,9 @@ function renderCharts(arr,meses,tot,cat,nx,TK,sc2,ciclo){
       }
     }
   });
+  
+  // Renderizar simulador de recategorización (usa la categoría actual por default)
+  updateSim(nombre);
 
 }
 
