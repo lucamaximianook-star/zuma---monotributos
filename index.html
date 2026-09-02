@@ -329,7 +329,45 @@ td{padding:16px 18px;vertical-align:middle}
   </div>
 </nav>
 
-<div class="hero">
+<div class="view-tabs" style="background:var(--marino2);padding:0 32px;border-bottom:1px solid rgba(255,255,255,.08)">
+  <div style="max-width:1440px;margin:0 auto;display:flex;gap:0">
+    <button id="tab-12m" onclick="switchView('12m')" class="vt-active" style="background:transparent;border:none;color:#fff;padding:16px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid var(--celeste);transition:var(--ease);letter-spacing:.3px">📊 Monitoreo 12M</button>
+    <button id="tab-ciclo" onclick="switchView('ciclo')" style="background:transparent;border:none;color:rgba(255,255,255,.5);padding:16px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:var(--ease);letter-spacing:.3px">📅 Análisis por ciclo</button>
+  </div>
+</div>
+
+<!-- HERO Vista 12M -->
+<div class="hero" id="hero-12m">
+  <div class="hero-inner">
+    <div class="hero-stat">
+      <div class="hs-n" id="st12">—</div>
+      <div class="hs-l">Clientes activos</div>
+    </div>
+    <div class="hero-stat ok">
+      <div class="hs-n" id="so12">—</div>
+      <div class="hs-l">OK — bajo 50%</div>
+    </div>
+    <div class="hero-stat al">
+      <div class="hs-n" id="sa12">—</div>
+      <div class="hs-l">Alerta — 50–80%</div>
+    </div>
+    <div class="hero-stat ro">
+      <div class="hs-n" id="sr12">—</div>
+      <div class="hs-l">Rojo — sobre 80%</div>
+    </div>
+    <div class="hero-stat rx">
+      <div class="hs-n" id="srx12">—</div>
+      <div class="hs-l">En riesgo exclusión (≥ 90%)</div>
+    </div>
+    <div class="hero-right">
+      <div class="hr-lbl">Período analizado</div>
+      <div class="hr-val" id="periodo-12m">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO Vista Ciclo -->
+<div class="hero" id="hero-ciclo" style="display:none">
   <div class="hero-inner">
     <div class="hero-stat">
       <div class="hs-n" id="st">—</div>
@@ -337,19 +375,15 @@ td{padding:16px 18px;vertical-align:middle}
     </div>
     <div class="hero-stat ok">
       <div class="hs-n" id="so">—</div>
-      <div class="hs-l">OK — bajo 50%</div>
+      <div class="hs-l">Dentro de su Cat.</div>
     </div>
     <div class="hero-stat al">
       <div class="hs-n" id="sa">—</div>
-      <div class="hs-l">Alerta — 50–80%</div>
+      <div class="hs-l">Cerca del tope (≥ 85%)</div>
     </div>
     <div class="hero-stat ro">
       <div class="hs-n" id="sr">—</div>
-      <div class="hs-l">Rojo — sobre 80%</div>
-    </div>
-    <div class="hero-stat rx">
-      <div class="hs-n" id="srx">—</div>
-      <div class="hs-l">En riesgo exclusión</div>
+      <div class="hs-l">Superaron su Cat.</div>
     </div>
     <div class="hero-right">
       <div class="hr-lbl">Ciclo activo</div>
@@ -362,7 +396,7 @@ td{padding:16px 18px;vertical-align:middle}
   <div class="tb-inner">
     <div class="tf-g"><label>Grupo</label>
       <select id="fg" onchange="onGroupChange()"><option value="">Todos</option></select></div>
-    <div class="tf-g"><label>Ciclo</label>
+    <div class="tf-g" id="tf-ciclo" style="display:none"><label>Ciclo</label>
       <select id="fc" onchange="onCC()">
         <option value="auto" selected>Ciclo activo (automático)</option>
         <option value="c1">Ciclo Ene-Dic</option>
@@ -385,7 +419,24 @@ td{padding:16px 18px;vertical-align:middle}
 </div>
 
 <div class="main">
-  <div class="tc">
+  <!-- TABLA Vista 12M -->
+  <div class="tc" id="table-12m">
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th id="thn12" onclick="sortBy('n')">Cliente</th>
+          <th id="thg12" onclick="sortBy('g')">Grupo</th>
+          <th id="thc12" onclick="sortBy('c')" style="text-align:center">Cat.</th>
+          <th onclick="sortBy('m12v')" style="text-align:right">Facturado últimos 12 meses</th>
+          <th id="thpk" onclick="sortBy('m')" style="text-align:right">% del tope máximo (K)</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="tbody12"></tbody>
+      </table>
+    </div>
+  </div>
+  <!-- TABLA Vista Ciclo -->
+  <div class="tc" id="table-ciclo" style="display:none">
     <div class="tw">
       <table>
         <thead><tr>
@@ -621,8 +672,8 @@ function onCC(){
   const raw=document.getElementById('fc').value;
   const ci=resolveCiclo(raw);
   const lbl=ci==='c1'?(M1[0]+' → '+M1[11]):(M2[0]+' → '+M2[11]);
-  document.getElementById('ciclo-val').textContent=raw==='auto'?lbl+' (auto)':lbl;
-  document.getElementById('thlbl').textContent=ci==='c1'?'Ene–Dic':'Jul–Jun';
+  const cv=document.getElementById('ciclo-val');if(cv)cv.textContent=raw==='auto'?lbl+' (auto)':lbl;
+  const tl=document.getElementById('thlbl');if(tl)tl.textContent=lbl;
   render();
 }
 
@@ -691,8 +742,42 @@ function gFilt(){
   }).sort((a,b)=>{
     if(sc==='n')return sd*a.n.localeCompare(b.n);if(sc==='g')return sd*a.g.localeCompare(b.g);
     if(sc==='t')return sd*(a.tot-b.tot);if(sc==='p')return sd*(a.leQueda-b.leQueda);
-    if(sc==='c')return sd*(a.ci-b.ci);if(sc==='m')return sd*(a.acum12m-b.acum12m);return 0;
+    if(sc==='c')return sd*(a.ci-b.ci);if(sc==='m')return sd*(a.acum12m-b.acum12m);
+    if(sc==='m12v')return sd*((a.acum12m||0)-(b.acum12m||0));return 0;
   });
+}
+
+let CURRENT_VIEW='12m'; // '12m' o 'ciclo'
+
+function switchView(v){
+  CURRENT_VIEW=v;
+  const t12=document.getElementById('tab-12m'),tc=document.getElementById('tab-ciclo');
+  const h12=document.getElementById('hero-12m'),hc=document.getElementById('hero-ciclo');
+  const tbl12=document.getElementById('table-12m'),tblc=document.getElementById('table-ciclo');
+  const tfciclo=document.getElementById('tf-ciclo');
+  if(v==='12m'){
+    t12.className='vt-active';t12.style.color='#fff';t12.style.borderBottomColor='var(--celeste)';
+    tc.className='';tc.style.color='rgba(255,255,255,.5)';tc.style.borderBottomColor='transparent';
+    h12.style.display='';hc.style.display='none';
+    tbl12.style.display='';tblc.style.display='none';
+    tfciclo.style.display='none';
+  }else{
+    tc.className='vt-active';tc.style.color='#fff';tc.style.borderBottomColor='var(--celeste)';
+    t12.className='';t12.style.color='rgba(255,255,255,.5)';t12.style.borderBottomColor='transparent';
+    h12.style.display='none';hc.style.display='';
+    tbl12.style.display='none';tblc.style.display='';
+    tfciclo.style.display='';
+  }
+  render();
+}
+
+// Genera el label del período 12M corridos (últimos 12 meses hasta el anterior al actual)
+function get12MPeriodLabel(){
+  const MESES_C=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const now=new Date();
+  const endM=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const startM=new Date(endM.getFullYear(),endM.getMonth()-11,1);
+  return `${MESES_C[startM.getMonth()]}-${String(startM.getFullYear()).slice(-2)} → ${MESES_C[endM.getMonth()]}-${String(endM.getFullYear()).slice(-2)}`;
 }
 
 function sortBy(col){
@@ -703,12 +788,70 @@ function sortBy(col){
 
 function render(){
   const data=gFilt();
-  document.getElementById('st').textContent=data.length;
-  document.getElementById('so').textContent=data.filter(d=>d.s.k==='ok').length;
-  document.getElementById('sa').textContent=data.filter(d=>d.s.k==='al').length;
-  document.getElementById('sr').textContent=data.filter(d=>d.s.k==='ro').length;
-  document.getElementById('srx').textContent=data.filter(d=>sem12k(d.sem12m)==='ro').length;
   document.getElementById('tcnt').textContent=data.length+' clientes';
+  
+  // Actualizar label del período 12M
+  const periodo12m=document.getElementById('periodo-12m');
+  if(periodo12m)periodo12m.textContent=get12MPeriodLabel();
+  
+  // Actualizar título dinámico de la columna del ciclo con rango de meses reales
+  const thlbl=document.getElementById('thlbl');
+  const fcVal=document.getElementById('fc').value;
+  const ci=resolveCiclo(fcVal);
+  if(thlbl){
+    if(ci==='c1')thlbl.textContent=M1[0]+' → '+M1[11];
+    else thlbl.textContent=M2[0]+' → '+M2[11];
+  }
+  
+  if(CURRENT_VIEW==='12m'){
+    render12M(data);
+  }else{
+    renderCiclo(data);
+  }
+}
+
+function render12M(data){
+  // Hero cards de vista 12M
+  document.getElementById('st12').textContent=data.length;
+  document.getElementById('so12').textContent=data.filter(d=>sem12k(d.sem12m)==='ok').length;
+  document.getElementById('sa12').textContent=data.filter(d=>sem12k(d.sem12m)==='al').length;
+  document.getElementById('sr12').textContent=data.filter(d=>sem12k(d.sem12m)==='ro').length;
+  document.getElementById('srx12').textContent=data.filter(d=>(d.pct12m||0)>=0.9).length;
+  const tbody=document.getElementById('tbody12');
+  if(!data.length){tbody.innerHTML=`<tr><td colspan="6" class="no-r">No hay clientes que coincidan.</td></tr>`;return;}
+  tbody.innerHTML=data.map((d,i)=>{
+    const cL=CATS.length?CATS[d.ci].c:'—';
+    const semK12=sem12k(d.sem12m),c12=sCol(semK12);
+    const isS=sel===d.n?'sel':'';
+    const delay=Math.min(i,8)*40;
+    return`<tr class="${isS}" style="animation-delay:${delay}ms">
+      <td><div class="cname">${d.n}</div>
+        <div class="pi"><div class="pt"><div class="pf" style="width:${Math.min((d.pct12m||0)*100,100).toFixed(1)}%;background:${c12}"></div></div>
+        <span class="pl">${fmtp(d.pct12m||0)}</span></div></td>
+      <td><span class="b b-g">${d.g}</span></td>
+      <td style="text-align:center"><span class="b b-cat">${cL}</span></td>
+      <td class="am"><div style="font-size:16px;font-weight:700;color:var(--text)">${fmt(d.acum12m||0)}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">últimos 12 meses corridos</div></td>
+      <td style="text-align:right">
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px">
+          <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${c12};flex-shrink:0;border:2px solid rgba(0,0,0,.05)"></span>
+          <div>
+            <div style="font-size:18px;font-weight:700;color:${c12};line-height:1">${fmtp(d.pct12m||0)}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:3px">del tope máx K</div>
+          </div>
+        </div>
+        <div style="margin-top:6px"><span class="b b-${semK12}" style="font-size:11px;padding:4px 10px;border-width:2px">${sem12lbl(d.sem12m)}</span></div>
+      </td>
+      <td><button class="dbtn" onclick="openP('${d.n.replace(/'/g,"\\'")}')">Ver →</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCiclo(data){
+  // Hero cards de vista Ciclo (respecto a categoría del cliente)
+  document.getElementById('st').textContent=data.length;
+  document.getElementById('so').textContent=data.filter(d=>d.semCatK==='ok'&&!d.supera).length;
+  document.getElementById('sa').textContent=data.filter(d=>d.semCatK==='al').length;
+  document.getElementById('sr').textContent=data.filter(d=>d.supera).length;
   const tbody=document.getElementById('tbody');
   if(!data.length){tbody.innerHTML=`<tr><td colspan="8" class="no-r">No hay clientes que coincidan.</td></tr>`;return;}
   tbody.innerHTML=data.map((d,i)=>{
@@ -736,7 +879,8 @@ function showDetail(nombre){
   if(!c){closeP();return;}
   buildP(nombre);
   document.querySelector('.nav').style.display='';
-  document.querySelector('.hero').style.display='none';
+  document.querySelectorAll('.hero').forEach(h=>h.style.display='none');
+  const vt=document.querySelector('.view-tabs');if(vt)vt.style.display='none';
   document.querySelector('.tb-wrap').style.display='none';
   document.querySelector('.main').style.display='none';
   document.getElementById('dv').classList.add('on');
@@ -745,7 +889,15 @@ function showDetail(nombre){
 function showList(){
   sel=null;
   document.getElementById('dv').classList.remove('on');
-  document.querySelector('.hero').style.display='';
+  // Restaurar hero según vista activa
+  if(CURRENT_VIEW==='12m'){
+    document.getElementById('hero-12m').style.display='';
+    document.getElementById('hero-ciclo').style.display='none';
+  }else{
+    document.getElementById('hero-12m').style.display='none';
+    document.getElementById('hero-ciclo').style.display='';
+  }
+  const vt=document.querySelector('.view-tabs');if(vt)vt.style.display='';
   document.querySelector('.tb-wrap').style.display='';
   document.querySelector('.main').style.display='';
   document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('sel'));
