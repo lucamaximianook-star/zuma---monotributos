@@ -329,16 +329,13 @@ td{padding:16px 18px;vertical-align:middle}
   </div>
 </nav>
 
-<div class="view-tabs" style="background:var(--marino2);padding:0 32px;border-bottom:1px solid rgba(255,255,255,.08)">
-  <div style="max-width:1440px;margin:0 auto;display:flex;gap:0">
-    <button id="tab-12m" onclick="switchView('12m')" class="vt-active" style="background:transparent;border:none;color:#fff;padding:16px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid var(--celeste);transition:var(--ease);letter-spacing:.3px">📊 Monitoreo 12M</button>
-    <button id="tab-ciclo" onclick="switchView('ciclo')" style="background:transparent;border:none;color:rgba(255,255,255,.5);padding:16px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:var(--ease);letter-spacing:.3px">📅 Análisis por ciclo</button>
-  </div>
-</div>
-
 <!-- HERO Vista 12M -->
 <div class="hero" id="hero-12m">
   <div class="hero-inner">
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;padding:0 4px 0 0">
+      <button id="tab-12m" onclick="switchView('12m')" style="background:var(--celeste);color:#fff;border:none;padding:24px 20px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border-radius:12px;transition:var(--ease);letter-spacing:.3px;text-align:left;box-shadow:0 4px 12px rgba(62,140,255,.25);width:100%">📊 Monitoreo 12M</button>
+      <button id="tab-ciclo" onclick="switchView('ciclo')" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.08);padding:24px 20px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border-radius:12px;transition:var(--ease);letter-spacing:.3px;text-align:left;width:100%">📅 Análisis por ciclo</button>
+    </div>
     <div class="hero-stat">
       <div class="hs-n" id="st12">—</div>
       <div class="hs-l">Clientes activos</div>
@@ -369,6 +366,10 @@ td{padding:16px 18px;vertical-align:middle}
 <!-- HERO Vista Ciclo -->
 <div class="hero" id="hero-ciclo" style="display:none">
   <div class="hero-inner">
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;padding:0 4px 0 0">
+      <button id="tab-12m-2" onclick="switchView('12m')" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.08);padding:24px 20px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border-radius:12px;transition:var(--ease);letter-spacing:.3px;text-align:left;width:100%">📊 Monitoreo 12M</button>
+      <button id="tab-ciclo-2" onclick="switchView('ciclo')" style="background:var(--celeste);color:#fff;border:none;padding:24px 20px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border-radius:12px;transition:var(--ease);letter-spacing:.3px;text-align:left;box-shadow:0 4px 12px rgba(62,140,255,.25);width:100%">📅 Análisis por ciclo</button>
+    </div>
     <div class="hero-stat">
       <div class="hs-n" id="st">—</div>
       <div class="hs-l">Clientes activos</div>
@@ -720,14 +721,11 @@ function gTotMes(c,ci){
 function gFilt(){
   const g=document.getElementById('fg').value,ci=resolveCiclo(document.getElementById('fc').value);
   const sf=document.getElementById('fs').value,q=document.getElementById('fq').value.toLowerCase();
-  return CL.filter(c=>{
+  // Primero mapeamos todos y calculamos indicadores
+  const mapped=CL.filter(c=>{
     if(g&&c.g!==g)return false;if(q&&!c.n.toLowerCase().includes(q))return false;
-    const arr=ci==='c1'?c.c1:c.c2,miss=ci==='c1'?c.m1:c.m2;
-    const tot=arr.reduce((a,b)=>a+b,0);
-    const s=gS(TK>0?tot/TK:0,gInc(arr,miss,ci),gNd(miss,ci));
-    if(sf&&s.k!==sf)return false;return true;
+    return true;
   }).map(c=>{
-    const ci=resolveCiclo(document.getElementById('fc').value);
     const arr=ci==='c1'?c.c1:c.c2,miss=ci==='c1'?c.m1:c.m2;
     const tot=arr.reduce((a,b)=>a+b,0),pct=TK>0?tot/TK:0;
     const cSheet=gCiByName(c.catSheet),cIdx=cSheet>-1?cSheet:gCi(tot),inc=gInc(arr,miss,ci);
@@ -739,7 +737,25 @@ function gFilt(){
     // Semáforo respecto a su categoría (para el círculo al lado del total)
     const semCatK=pctCat>=1?'ro':pctCat>=0.85?'al':'ok';
     return{...c,arr,miss,tot,pct,ci:cIdx,inc,s:gS(pct,inc,gNd(miss,cIdx)),acum12m:c.acum12m||0,pct12m:c.pct12m||0,sem12m:c.sem12m||'',supera:cSheet>-1&&cSheet<gCi(tot),catActual:c.catSheet||'',leQueda,pctCat,semCatK,topeCatActual};
-  }).sort((a,b)=>{
+  });
+  // Filtrar por estado según la vista actual
+  const filtered=mapped.filter(d=>{
+    if(!sf)return true;
+    if(CURRENT_VIEW==='12m'){
+      // Vista 12M: usar semáforo de 12M corridos (contra tope K)
+      const k=sem12k(d.sem12m);
+      return k===sf;
+    }else{
+      // Vista Ciclo: usar semáforo contra su categoría
+      if(sf==='ok')return d.semCatK==='ok'&&!d.supera;
+      if(sf==='al')return d.semCatK==='al';
+      if(sf==='ro')return d.supera;
+      if(sf==='inc')return d.inc;
+      if(sf==='nd3')return d.s.k==='nd3';
+      return true;
+    }
+  });
+  return filtered.sort((a,b)=>{
     if(sc==='n')return sd*a.n.localeCompare(b.n);if(sc==='g')return sd*a.g.localeCompare(b.g);
     if(sc==='t')return sd*(a.tot-b.tot);if(sc==='p')return sd*(a.leQueda-b.leQueda);
     if(sc==='c')return sd*(a.ci-b.ci);if(sc==='m')return sd*(a.acum12m-b.acum12m);
@@ -751,19 +767,14 @@ let CURRENT_VIEW='12m'; // '12m' o 'ciclo'
 
 function switchView(v){
   CURRENT_VIEW=v;
-  const t12=document.getElementById('tab-12m'),tc=document.getElementById('tab-ciclo');
   const h12=document.getElementById('hero-12m'),hc=document.getElementById('hero-ciclo');
   const tbl12=document.getElementById('table-12m'),tblc=document.getElementById('table-ciclo');
   const tfciclo=document.getElementById('tf-ciclo');
   if(v==='12m'){
-    t12.className='vt-active';t12.style.color='#fff';t12.style.borderBottomColor='var(--celeste)';
-    tc.className='';tc.style.color='rgba(255,255,255,.5)';tc.style.borderBottomColor='transparent';
     h12.style.display='';hc.style.display='none';
     tbl12.style.display='';tblc.style.display='none';
     tfciclo.style.display='none';
   }else{
-    tc.className='vt-active';tc.style.color='#fff';tc.style.borderBottomColor='var(--celeste)';
-    t12.className='';t12.style.color='rgba(255,255,255,.5)';t12.style.borderBottomColor='transparent';
     h12.style.display='none';hc.style.display='';
     tbl12.style.display='none';tblc.style.display='';
     tfciclo.style.display='';
@@ -880,7 +891,6 @@ function showDetail(nombre){
   buildP(nombre);
   document.querySelector('.nav').style.display='';
   document.querySelectorAll('.hero').forEach(h=>h.style.display='none');
-  const vt=document.querySelector('.view-tabs');if(vt)vt.style.display='none';
   document.querySelector('.tb-wrap').style.display='none';
   document.querySelector('.main').style.display='none';
   document.getElementById('dv').classList.add('on');
@@ -897,7 +907,6 @@ function showList(){
     document.getElementById('hero-12m').style.display='none';
     document.getElementById('hero-ciclo').style.display='';
   }
-  const vt=document.querySelector('.view-tabs');if(vt)vt.style.display='';
   document.querySelector('.tb-wrap').style.display='';
   document.querySelector('.main').style.display='';
   document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('sel'));
@@ -980,7 +989,7 @@ function buildP(nombre){
   const tot=arr.reduce((a,b)=>a+b,0),pct=TK>0?tot/TK:0;
   const cSheet=gCiByName(c.catSheet),autoIdx=gCi(tot),superaCat=cSheet>-1&&cSheet<autoIdx,ci2=cSheet>-1?cSheet:autoIdx,cat=CATS[ci2],nxIdx=superaCat?autoIdx:(ci2<CATS.length-1?ci2+1:-1),nx=nxIdx>=0?CATS[nxIdx]:null;
   const inc=gInc(arr,miss,ci),s=gS(pct,inc,gNd(miss,ci)),sc2=sCol(s.k);
-  const maxV=Math.max(...arr,1),fCat=nx?nx.t-tot:0,fMax=TK-tot,pCat=nx?tot/nx.t:1;
+  const maxV=Math.max(...arr,1),fCat=cat?cat.t-tot:0,fMax=TK-tot,pCat=cat?tot/cat.t:1;
   const cu=gCu(c,ci2),cuN=nx?gCu(c,nxIdx):null;
   const ib=gIIBB(c,ci2),ibN=nx?gIIBB(c,nxIdx):null;
   const totM=gTotMes(c,ci2),totNM=cuN?gTotMes(c,nxIdx):null;
@@ -1025,9 +1034,9 @@ function buildP(nombre){
     <div class="sps pdf-kpi-section">
       <div class="sec-t">Resumen del ciclo</div>
       <div class="kgrid">
-        <div class="kc dark"><div class="kl">Facturación ${ci==='c1'?'Ene–Dic 25':'Jul 25–Jun 26'}</div><div class="kv">$${fmtk(tot)}</div><div class="ks">$${fmt(tot)}</div></div>
+        <div class="kc dark"><div class="kl">Facturación ${ci==='c1'?(M1[0]+'–'+M1[11]):(M2[0]+'–'+M2[11])}</div><div class="kv">$${fmtk(tot)}</div><div class="ks">$${fmt(tot)}</div></div>
         <div class="kc"><div class="kl">Categoría actual</div><div class="kv">${cat.c}</div><div class="ks">Tope: $${fmtk(cat.t)}</div></div>
-        <div class="kc"><div class="kl">${superaCat?'Supera Cat. '+cat.c:'Falta para cat. siguiente'}</div><div class="kv" style="color:${nx&&fCat>0?'var(--text)':'var(--ro)'}">${nx?'$'+fmtk(fCat):'Máximo'}</div><div class="ks">${superaCat?'Falta para Cat. '+nx.c:(nx?'Cat. '+nx.c:'')}</div></div>
+        <div class="kc"><div class="kl">${superaCat?'Supera Cat. '+cat.c:'Le queda para Cat. '+cat.c}</div><div class="kv" style="color:${fCat>0?'var(--text)':'var(--ro)'}">${fCat>0?'$'+fmtk(fCat):'Superado'}</div><div class="ks">${superaCat?'Debe pasar a Cat. '+(nx?nx.c:'—'):'Tope: $'+fmtk(cat.t)}</div></div>
         <div class="kc"><div class="kl">Falta para tope K</div><div class="kv" style="color:${fMax>0?'var(--text)':'var(--ro)'}">${fMax>0?'$'+fmtk(fMax):'Superado'}</div><div class="ks">$${fmtk(TK)}</div></div>
       </div>
     </div>
@@ -1615,7 +1624,7 @@ function exportExcel(nombre){
     ['% del tope K',fmtp(pct)],
     ['Categoría actual',cat.c],
     ['Tope categoría actual','$'+fmt(cat.t)],
-    ['Falta para cat. siguiente',nx?'$'+fmt(nx.t-tot):'Tope máximo alcanzado'],
+    ['Le queda hasta tope Cat. '+cat.c,tot<cat.t?'$'+fmt(cat.t-tot):'Superado'],
     ['Falta para tope K',tot<TK?'$'+fmt(TK-tot):'Superado'],
     ['Estado',s.l],
   ];
