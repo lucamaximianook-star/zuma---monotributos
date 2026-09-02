@@ -399,7 +399,6 @@ td{padding:16px 18px;vertical-align:middle}
       <select id="fg" onchange="onGroupChange()"><option value="">Todos</option></select></div>
     <div class="tf-g" id="tf-ciclo" style="display:none"><label>Ciclo</label>
       <select id="fc" onchange="onCC()">
-        <option value="auto" selected>Ciclo activo (automático)</option>
         <option value="c1">Ciclo Ene-Dic</option>
         <option value="c2">Ciclo Jul-Jun</option>
       </select></div>
@@ -616,11 +615,13 @@ async function loadAll(){
   sL(true);
   // Recalcular meses según fecha actual (por si cambió de sesión)
   const nuevo=calcMeses();M1=nuevo.M1;M2=nuevo.M2;PAST_C1=nuevo.PAST_C1;PAST_C2=nuevo.PAST_C2;
-  // Actualizar label del selector de ciclo dinámicamente
+  // Actualizar label del selector de ciclo dinámicamente + setear default al ciclo por cerrar
   const cSel=document.getElementById('fc');
   if(cSel){
     const opt1=cSel.querySelector('option[value="c1"]');if(opt1)opt1.textContent=M1[0]+' → '+M1[11];
     const opt2=cSel.querySelector('option[value="c2"]');if(opt2)opt2.textContent=M2[0]+' → '+M2[11];
+    // Seleccionar por default el ciclo por cerrar (el que sirve para recategorizar)
+    if(!cSel.dataset.userSelected)cSel.value=getCicloPorCerrar();
   }
   try{
     prog(10,'Cargando escalas...');await loadT();
@@ -666,14 +667,24 @@ function showE(m){const e=document.getElementById('err');e.textContent=m;e.style
 function hideE(){document.getElementById('err').style.display='none';}
 
 function resolveCiclo(v){
-  if(v==='auto'){const now=new Date(),m=now.getMonth();return m>=6?'c2':'c1';}
-  return v;
+  // Sin opción auto: si v es 'c1' o 'c2', usar tal cual. Si viene vacío o auto (por compatibilidad), traer el "por cerrar"
+  if(v==='c1'||v==='c2')return v;
+  return getCicloPorCerrar();
+}
+// El "ciclo por cerrar" es el que está en su etapa final antes de ser usado para recategorizar.
+// - 2do semestre (Jul-Dic) → ciclo Ene-Dic (cierra en Dic → recateg en Ene)
+// - 1er semestre (Ene-Jun) → ciclo Jul-Jun (cierra en Jun → recateg en Jul)
+function getCicloPorCerrar(){
+  const now=new Date(),m=now.getMonth();
+  return m>=6?'c1':'c2';
 }
 function onCC(){
-  const raw=document.getElementById('fc').value;
+  const fc=document.getElementById('fc');
+  const raw=fc.value;
+  fc.dataset.userSelected='1'; // marcar que el usuario eligió manualmente
   const ci=resolveCiclo(raw);
   const lbl=ci==='c1'?(M1[0]+' → '+M1[11]):(M2[0]+' → '+M2[11]);
-  const cv=document.getElementById('ciclo-val');if(cv)cv.textContent=raw==='auto'?lbl+' (auto)':lbl;
+  const cv=document.getElementById('ciclo-val');if(cv)cv.textContent=lbl;
   const tl=document.getElementById('thlbl');if(tl)tl.textContent=lbl;
   render();
 }
@@ -809,10 +820,10 @@ function render(){
   const thlbl=document.getElementById('thlbl');
   const fcVal=document.getElementById('fc').value;
   const ci=resolveCiclo(fcVal);
-  if(thlbl){
-    if(ci==='c1')thlbl.textContent=M1[0]+' → '+M1[11];
-    else thlbl.textContent=M2[0]+' → '+M2[11];
-  }
+  const lblCiclo=ci==='c1'?(M1[0]+' → '+M1[11]):(M2[0]+' → '+M2[11]);
+  if(thlbl)thlbl.textContent=lblCiclo;
+  // Actualizar label del hero-ciclo también
+  const cv=document.getElementById('ciclo-val');if(cv)cv.textContent=lblCiclo;
   
   if(CURRENT_VIEW==='12m'){
     render12M(data);
