@@ -498,10 +498,12 @@ async function loadFact(){
   if(hi===-1)return;
   const hdr=rows[hi].map(h=>cl(h));
   const iN=hdr.findIndex(h=>h.toUpperCase()==='NOMBRE');
-  // Detectar columnas de meses: matchean patrón "Mmm-YY"
-  const mesRegex=/^(Ene|Feb|Mar|Abr|May|Jun|Jul|Ago|Sep|Oct|Nov|Dic)-\d{2}$/;
+  // Detectar columnas de meses: matchean patrón "Mmm-YY" case-insensitive
+  // Y normalizar el label a formato canónico (Ene, Feb, ... Dic con capitalización estándar)
+  const mesRegex=/^(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)-\d{2}$/i;
+  const capMes=(s)=>{const p=s.split('-');return p[0].charAt(0).toUpperCase()+p[0].slice(1).toLowerCase()+'-'+p[1];};
   const colsMeses=[]; // [{idx, label}]
-  for(let j=0;j<hdr.length;j++){if(mesRegex.test(hdr[j])){colsMeses.push({idx:j,label:hdr[j]});FACT_MESES.push(hdr[j]);}}
+  for(let j=0;j<hdr.length;j++){if(mesRegex.test(hdr[j])){const lbl=capMes(hdr[j]);colsMeses.push({idx:j,label:lbl});FACT_MESES.push(lbl);}}
   if(iN===-1||colsMeses.length===0)return;
   // Parsear filas
   for(let i=hi+1;i<rows.length;i++){
@@ -554,7 +556,7 @@ async function loadCL(){
   const iAdh=h.indexOf('ADHERENTES OS')>-1?h.indexOf('ADHERENTES OS'):h.indexOf('ADHERENTES');
   for(let i=hi+1;i<rows.length;i++){
     const r=rows[i];const nm=cl(r[iN>-1?iN:1]);if(!nm||nm.toUpperCase()==='NOMBRE')continue;
-    if(cl(r[iE>-1?iE:14]).toUpperCase()==='BAJA')continue;
+    if(iE>-1){const est=cl(r[iE]).toUpperCase();if(est==='BAJA'||est==='INACTIVO'||est.startsWith('BAJA'))continue;}
     CL.push({n:nm,g:cl(r[iG>-1?iG:2])||'INDIVIDUAL',a:cl(r[iA>-1?iA:5])||'Servicios',sl:cl(r[iSL>-1?iSL:6])||'Independiente',iibb:cl(r[iI>-1?iI:7])||'',catSheet:cl(r[iCat>-1?iCat:4]).toUpperCase()||'',adhOS:iAdh>-1?n(r[iAdh]):0});}
 }
 async function loadAll(){
